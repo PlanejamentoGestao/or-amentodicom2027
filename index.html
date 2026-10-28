@@ -1,0 +1,688 @@
+<title>Orçamento DICOM 2026 x 2027</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: deck de capítulos em tela cheia (identidade do painel de decisão DICOM), recolorido com os azuis FGV do orçamento */
+:root{
+  --bg:#FFFFFF; --card:#FFFFFF; --soft:#F1F6F9; --line:#DCE5EB; --ink:#0D1E2A; --mut:#5B6B76;
+  --acc:#008BC9; --acc-2:#006A9C; --acc-l:#7FBCDD; --mark:#CBE6F5; --acc-t:#E7F4FB;
+  --deep:#05314A; --deep-2:#0B4566; --deep-ink:#FFFFFF; --deep-mut:#9DBFD3;
+  --up:#006A9C; --down:#6B7A85; --shadow:0 10px 28px rgba(5,49,74,.09);
+  color-scheme:light;
+  --head:"Montserrat","Gotham","Helvetica Neue",Arial,sans-serif;
+  --body:"Montserrat","Gotham","Helvetica Neue",Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;overflow:hidden}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.45 var(--body);font-variant-numeric:tabular-nums}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--bg)}
+body.dk::before{background:var(--deep)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+
+/* ---------- moldura ---------- */
+.prog{position:fixed;z-index:41;top:env(safe-area-inset-top,0px);left:0;height:3px;width:0;background:var(--acc);transition:width .5s}
+.top{position:fixed;z-index:30;top:0;left:0;right:0;display:flex;align-items:center;padding-block:calc(env(safe-area-inset-top,0px) + .9rem) .7rem;padding-left:max(16px,env(safe-area-inset-left,0px),2.2rem);padding-right:max(16px,env(safe-area-inset-right,0px),2.2rem);background:linear-gradient(180deg,var(--bg) 60%,transparent);pointer-events:none}
+.brand{display:flex;align-items:center;gap:.8rem;font:600 .64rem var(--head);letter-spacing:.32em;text-transform:uppercase;color:var(--ink)}
+.brand::before{content:"";width:.6rem;height:.6rem;background:var(--acc)}
+body.dk .top{background:linear-gradient(180deg,var(--deep) 60%,transparent)}
+body.dk .brand{color:var(--deep-ink)}
+.bot{position:fixed;z-index:30;left:0;right:0;bottom:0;display:flex;align-items:center;gap:1rem;padding-block:.9rem calc(env(safe-area-inset-bottom,0px) + .9rem);padding-left:max(16px,env(safe-area-inset-left,0px),2.2rem);padding-right:max(16px,env(safe-area-inset-right,0px),2.2rem);background:linear-gradient(0deg,var(--bg) 62%,transparent)}
+body.dk .bot{background:linear-gradient(0deg,var(--deep) 62%,transparent)}
+.dots{display:flex;gap:.4rem;flex:1;justify-content:center;flex-wrap:wrap}
+.dots button{width:.5rem;height:.5rem;padding:0;border:1px solid var(--ink);background:transparent;transition:all .25s}
+.dots button[aria-current="true"]{width:2rem;background:var(--acc);border-color:var(--acc)}
+body.dk .dots button{border-color:var(--deep-mut)}
+.pos{font:500 .68rem var(--head);letter-spacing:.2em;color:var(--mut);white-space:nowrap}
+body.dk .pos{color:var(--deep-mut)}
+.nv{height:2.6rem;padding:0 1.3rem;border:1px solid var(--ink);background:transparent;color:var(--ink);font:600 .64rem var(--head);letter-spacing:.18em;text-transform:uppercase;white-space:nowrap;transition:background .2s,color .2s,border-color .2s}
+.nv.p{background:var(--ink);color:var(--bg)}
+.nv:hover:not([disabled]){background:var(--acc);border-color:var(--acc);color:#fff}
+.nv[disabled]{opacity:.3;cursor:not-allowed}
+body.dk .nv{border-color:var(--deep-ink);color:var(--deep-ink)}
+body.dk .nv.p{background:var(--deep-ink);color:var(--deep)}
+
+/* ---------- slides ---------- */
+#stage{position:fixed;inset:0}
+.slide{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding-block:calc(env(safe-area-inset-top,0px) + 4.4rem) calc(env(safe-area-inset-bottom,0px) + 6.5rem);padding-left:max(16px,env(safe-area-inset-left,0px),4vw);padding-right:max(16px,env(safe-area-inset-right,0px),4vw);opacity:0;visibility:hidden;transform:translateX(3%);transition:opacity .45s,transform .5s cubic-bezier(.2,.7,.2,1),visibility 0s .5s}
+.slide[data-s="before"]{transform:translateX(-3%)}
+.slide.on{opacity:1;visibility:visible;transform:none;transition:opacity .45s,transform .5s cubic-bezier(.2,.7,.2,1),visibility 0s}
+.slide.dark{background:var(--deep);color:var(--deep-ink)}
+.in{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:1.4rem}
+.hd{display:flex;flex-direction:column;gap:1rem}
+.kick{display:flex;align-items:center;gap:.9rem;font:600 .64rem var(--head);letter-spacing:.3em;text-transform:uppercase}
+.kick i{display:block;width:2.6rem;height:3px;background:var(--acc)}
+.kick em{font-style:normal;color:var(--mut);font-weight:500}
+.kick em::before{content:"/";margin-right:.9rem;color:var(--line)}
+h2{margin:0;font:300 clamp(1.7rem,3.6vw,2.9rem)/1.1 var(--head);letter-spacing:-.015em;text-wrap:balance}
+h2 b{font-weight:700;padding:0 .1em;margin:0 -.1em;background:linear-gradient(transparent 62%,var(--mark) 62%,var(--mark) 92%,transparent 92%);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.lead{margin:0;max-width:62rem;font-size:1.02rem;color:var(--mut);line-height:1.55}
+.lead b{color:var(--ink)}
+.card{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
+.lbl{font:700 .66rem var(--head);letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.note{font-size:.84rem;color:var(--mut);margin:0}
+.btn{display:inline-flex;align-items:center;gap:.5rem;height:2.3rem;padding:0 1rem;border:1px solid var(--ink);background:transparent;font:600 .62rem var(--head);letter-spacing:.16em;text-transform:uppercase}
+.btn:hover{background:var(--acc);border-color:var(--acc);color:#fff}
+
+/* ---------- capa ---------- */
+.cov{--deep-ink:var(--ink);--deep-mut:var(--mut);--deep-2:var(--line);position:relative;display:flex;flex-direction:column;gap:2.6rem;padding-top:1.6rem;min-height:calc(100vh - 13rem);justify-content:center}
+.cov-k{display:flex;align-items:center;gap:1rem;font:600 .7rem var(--head);letter-spacing:.32em;text-transform:uppercase;color:var(--acc)}
+.cov-k::before{content:"";width:3.2rem;height:3px;background:var(--acc)}
+.cov-h{margin:1.4rem 0 0;font:300 clamp(2.6rem,7vw,6rem)/.98 var(--head);letter-spacing:-.04em}
+.cov-h b{font-weight:700;color:var(--acc)}
+.cov-s{margin:1.6rem 0 0;font:300 clamp(1.05rem,1.8vw,1.5rem)/1.4 var(--head);color:var(--deep-mut);max-width:36rem}
+.cov-s em{font-style:normal;color:var(--deep-ink);font-weight:500}
+.cov-foot{display:flex;gap:3rem;align-items:flex-end;flex-wrap:wrap;border-top:1px solid var(--deep-2);padding-top:1.3rem}
+.cov-foot small{display:block;font:600 .55rem var(--head);letter-spacing:.28em;text-transform:uppercase;color:var(--deep-mut);margin-bottom:.45rem}
+.cov-foot b{font:400 1rem var(--head)}
+.cov-go{margin-left:auto;font:600 .62rem var(--head);letter-spacing:.28em;text-transform:uppercase;color:var(--acc);background:none;border:0}
+.cov-ghost{position:absolute;right:0;bottom:4rem;font:700 clamp(7rem,20vw,17rem)/.8 var(--head);letter-spacing:-.06em;color:transparent;-webkit-text-stroke:1px var(--mark);pointer-events:none;user-select:none}
+.cov>*:not(.cov-ghost){position:relative;z-index:1}
+
+/* ---------- visão geral ---------- */
+.ov{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:1.2rem;align-items:stretch}
+.tot{--deep-ink:var(--ink);--deep-mut:var(--mut);--deep-2:var(--acc-l);background:var(--acc-t);color:var(--ink);padding:1.6rem 1.8rem;display:flex;flex-direction:column;gap:1.1rem;border-top:4px solid var(--acc)}
+.tot .row{display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap}
+.tot .y{font:600 .7rem var(--head);letter-spacing:.2em;color:var(--deep-mut);width:3rem}
+.tot .v{font:300 clamp(2rem,4.6vw,3.4rem)/1 var(--head);letter-spacing:-.02em}
+.tot .v small{font-size:.4em;font-weight:500;color:var(--deep-mut);margin-left:.3rem}
+.tot .d{display:flex;gap:1.6rem;border-top:1px solid var(--deep-2);padding-top:1rem;flex-wrap:wrap}
+.tot .d b{display:block;font:300 2rem/1 var(--head);color:var(--acc-2)}
+.tot .d span{font-size:.82rem;color:var(--deep-mut)}
+.tot p{margin:0;font-size:.82rem;color:var(--deep-mut);line-height:1.5}
+.brg{padding:1.3rem 1.4rem;display:flex;flex-direction:column;gap:.9rem}
+.brg h3{margin:0;font:600 1rem var(--head)}
+.brow{display:grid;grid-template-columns:9.5rem minmax(0,1fr) 6.2rem;gap:.8rem;align-items:center;background:none;border:0;padding:.35rem 0;text-align:left;width:100%}
+.brow:hover .bn{color:var(--acc)}
+.bn{font-weight:600;font-size:.92rem}
+.bn small{display:block;font-weight:400;font-size:.76rem;color:var(--mut)}
+.btrack{height:1.6rem;background:var(--soft);position:relative}
+.btrack u{position:absolute;inset:0 auto 0 0;background:var(--acc);display:block;transition:width .8s cubic-bezier(.2,.7,.2,1)}
+.bv{font-weight:700;text-align:right;white-space:nowrap}
+.bv small{display:block;font-weight:500;font-size:.74rem;color:var(--mut)}
+.bksgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.9rem}
+.bk{padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.45rem;text-align:left;border:1px solid var(--line);background:var(--card);box-shadow:var(--shadow);border-top:3px solid var(--acc)}
+.bk:hover{border-color:var(--acc)}
+.bk b{font:600 .98rem var(--head)}
+.bk .n{font:300 1.65rem/1.1 var(--head)}
+.bk .n small{font-size:.5em;color:var(--mut);font-weight:500}
+.bk p{margin:0;font-size:.82rem;color:var(--mut);line-height:1.4}
+.bk em{font-style:normal;margin-top:auto;font:600 .6rem var(--head);letter-spacing:.16em;text-transform:uppercase;color:var(--acc)}
+
+
+/* ---------- visão geral (pptx) ---------- */
+.ovh{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem}
+.ovc{display:flex;flex-direction:column;gap:.55rem;text-align:left;padding:1rem 1.2rem;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--line);box-shadow:var(--shadow)}
+.ovc[aria-pressed="true"]{border-top-color:var(--acc);background:var(--acc-t)}
+.ovc:hover{border-color:var(--acc)}
+.ovn{display:flex;align-items:flex-end;gap:1rem;flex-wrap:wrap;font:300 clamp(1.5rem,3vw,2.3rem)/1 var(--head)}
+.ovn small{display:block;font:600 .58rem var(--head);letter-spacing:.16em;text-transform:uppercase;color:var(--mut);margin-bottom:.35rem}
+.ovn b{font-weight:500;color:var(--acc-2)}
+.ovn i{font-style:normal;color:var(--acc);font-size:.8em}
+.ovd{font-size:.9rem;color:var(--mut)}
+.ovd b{color:var(--acc-2)}
+.ovd em{font-style:normal;font-size:.8rem}
+.ptw{overflow-x:auto}
+.pt{min-width:560px;border-top:2px solid var(--ink)}
+.ph,.pr{display:grid;grid-template-columns:minmax(0,1fr) repeat(2,6.4rem) 7.4rem;gap:.8rem;align-items:center;padding:.6rem .9rem}
+.ph{font:700 .6rem/1.3 var(--head);letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+.ph span:not(:first-child){text-align:right}
+.ph span:nth-child(3){color:var(--acc-2)}
+.pr{border-bottom:1px solid var(--line);font-size:.9rem}
+.pr:nth-child(even){background:var(--soft)}
+.pr .num{text-align:right;white-space:nowrap}
+.pr .num.b{font-weight:700;color:var(--acc-2)}
+.pr .dv small{display:block;font-size:.72rem;font-weight:500;color:var(--mut)}
+.pr.ptot{background:var(--ink);color:var(--bg);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.pr.ptot .num.b,.pr.ptot .dv,.pr.ptot .dv small{color:var(--bg)}
+.pr.lv2>span:first-child{padding-left:1.4rem;color:var(--mut)}
+.pgrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:1rem}
+.pch,.ppr{padding:1rem 1.2rem;display:flex;flex-direction:column;gap:.7rem}
+.pch svg{width:100%;height:auto;max-height:280px}
+.pch text{font-family:var(--head)}
+.ppr div{display:flex;flex-direction:column;gap:.15rem;padding-bottom:.6rem;border-bottom:1px dashed var(--line)}
+.ppr div:last-child{border-bottom:0}
+.ppr b{font-size:.95rem}
+.ppr span{font-size:.86rem;color:var(--mut)}
+.ppr span b{color:var(--acc-2);font-size:inherit}
+.ppr small{font-size:.76rem;color:var(--acc-2)}
+.pr.hl{background:var(--acc-t)!important;border-left:4px solid var(--acc);box-shadow:inset 0 0 0 1px var(--acc-l);font-weight:600}
+.pr.hl .nb26{display:block;margin-top:.15rem;font:700 .64rem var(--head);letter-spacing:.08em;text-transform:uppercase;color:var(--acc-2)}
+.pr.hl .dv{color:var(--acc-2)}
+@media (max-width:860px){.ovh,.pgrid{grid-template-columns:1fr}}
+/* página 2: tudo na mesma tela, escalando com a altura da janela */
+.slide:has(.fit){padding-block:calc(env(safe-area-inset-top,0px) + 3.4rem) calc(env(safe-area-inset-bottom,0px) + 4.6rem)}
+.fit{gap:1em;font-size:clamp(13px,1.7vh,19px)}.fit .hd{gap:.5em}
+.fit h2{font-size:2.2em}
+.fit .lead{font-size:.98em;line-height:1.45}
+.fit .ovh{gap:1.6em;margin-block:.7em .8em}.fit .ovc{padding:.75em 1em;gap:.35em}
+.fit .ovn{font-size:2.1em}.fit .ovn small{font-size:.5em;margin-bottom:.2em}
+.fit .ovd{font-size:.9em}
+.fit .ph,.fit .pr{padding:.45em .9em;font-size:.98em;gap:.6em}
+.fit .ph{font-size:.62em}
+.fit .pt{min-width:0}
+.mk{background:#FFF200;color:#0D1E2A;padding:.1em .4em;font-weight:700;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.fit .note{font-size:.85em}
+@media (max-height:740px){.fit .lead{display:none}}
+/* aviso de rolagem */
+.sh{position:fixed;z-index:31;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 4.3rem);transform:translateX(-50%);display:inline-flex;align-items:center;gap:.5rem;height:2.2rem;padding:0 1.1rem;border:1px solid var(--acc);background:var(--acc);color:#fff;font:600 .62rem var(--head);letter-spacing:.16em;text-transform:uppercase;box-shadow:0 8px 22px rgba(5,49,74,.28);animation:shb 1.6s ease-in-out infinite}
+.sh:hover{background:var(--acc-2);border-color:var(--acc-2)}
+@keyframes shb{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,4px)}}
+
+/* ---------- como ler ---------- */
+.legend{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem}
+.lg{display:flex;gap:.8rem;align-items:flex-start;padding:.85rem 1rem;background:var(--soft)}
+.lg p{margin:0;font-size:.86rem;color:var(--mut)}
+.steps3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.9rem}
+.st3{padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.4rem}
+.st3 .num{font:300 2.2rem/1 var(--head);color:var(--acc)}
+.st3 b{font-size:1rem}
+.st3 span{font-size:.88rem;color:var(--mut)}
+.out{padding:.9rem 1.1rem;border:1px dashed var(--line);font-size:.88rem;color:var(--mut)}
+.out b{color:var(--ink)}
+
+/* ---------- pills ---------- */
+.st{display:inline-flex;align-items:center;gap:.3rem;font:700 .6rem/1 var(--head);letter-spacing:.08em;text-transform:uppercase;padding:.32rem .5rem;white-space:nowrap;border:1px solid transparent}
+.st.novo{background:var(--acc);color:#fff}
+.st.saiu{background:transparent;color:var(--mut);border-color:var(--line);text-decoration:line-through}
+.st.aum{background:var(--acc-t);color:var(--acc-2);border-color:var(--acc-l)}
+.st.red{background:var(--soft);color:var(--down);border-color:var(--line)}
+.st.igual{background:transparent;color:var(--mut);border-color:var(--line)}
+.st.mudou{background:transparent;color:var(--acc-2);border:1px dashed var(--acc-l)}
+.st.zero{background:transparent;color:var(--mut);border:1px dashed var(--line)}
+.st.renov{background:#E6F5EA;color:#1F6B3A;border-color:#BFE3CA}
+.st.novot{background:var(--ink);color:var(--bg)}
+.sup{display:inline-flex;align-items:center;gap:.35rem;font:600 .68rem/1.2 var(--body);color:var(--mut);padding:.18rem .45rem;background:var(--soft);border:1px solid var(--line);white-space:nowrap}
+.sup i{width:.5rem;height:.5rem;border-radius:50%;background:var(--c,var(--acc));flex:none}
+.inf{font-style:normal;color:var(--acc);font-weight:700;margin-left:.15rem}
+
+/* ---------- tabela expansível ---------- */
+.bhead{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:1.1rem;align-items:stretch}
+.kpis{--deep-mut:var(--mut);--deep-2:var(--acc-l);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;background:var(--acc-t);color:var(--ink);border-top:4px solid var(--acc)}
+.kpi{padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.35rem}
+.kpi+.kpi{border-left:1px solid var(--deep-2)}
+.kpi span{font:600 .62rem var(--head);letter-spacing:.18em;text-transform:uppercase;color:var(--deep-mut)}
+.kpi b{font:300 clamp(1.15rem,1.8vw,1.65rem)/1.05 var(--head);letter-spacing:-.02em;white-space:nowrap}
+.kpi b.ac{color:var(--acc-2);font-weight:500}
+.kpi small{font-size:.78rem;color:var(--deep-mut)}
+.hl{padding:1rem 1.2rem;display:flex;flex-direction:column;gap:.55rem}
+.hl ul{margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:.4rem;font-size:.9rem}
+.hl li::marker{color:var(--acc)}
+.tools{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between}
+.chips{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center}
+.chips .lbl{margin-right:.3rem}
+.chip{height:2rem;padding:0 .75rem;border:1px solid var(--line);background:var(--card);font:600 .74rem var(--body);color:var(--ink);display:inline-flex;align-items:center;gap:.4rem}
+.chip i{width:.5rem;height:.5rem;border-radius:50%;background:var(--c,var(--acc))}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tbl{display:flex;flex-direction:column;border-top:2px solid var(--ink)}
+.th,.gs,.ir,.tf{display:grid;grid-template-columns:minmax(0,1fr) 7.4rem 7.4rem 7.6rem 4.6rem;gap:.2rem 1rem;align-items:center}
+.th{padding:.6rem .9rem;font:700 .62rem var(--head);letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.th span:not(:first-child),.num{text-align:right;white-space:nowrap}
+details.grp{border-bottom:1px solid var(--line);background:var(--card)}
+details.grp:nth-of-type(even){background:var(--soft)}
+details.grp[open]{background:var(--acc-t)}
+.items .ir:nth-child(even){background:var(--card)}
+.gs{list-style:none;cursor:pointer;padding:.8rem .9rem;position:relative}
+.gs::-webkit-details-marker{display:none}
+.gs:hover{background:var(--acc-t)}
+.gn{display:flex;flex-direction:column;gap:.15rem;min-width:0}
+.gn b{font-weight:700;font-size:.98rem;display:flex;align-items:center;gap:.5rem}
+.gn b::before{content:"+";flex:none;display:grid;place-items:center;width:1.3rem;height:1.3rem;border:1px solid var(--acc);color:var(--acc);font-weight:600;font-size:.95rem;line-height:1}
+details[open]>.gs .gn b::before{content:"−";background:var(--acc);color:#fff}
+.gn span{font-size:.8rem;color:var(--mut);padding-left:1.8rem}
+.gn code{font:500 .68rem var(--body);color:var(--mut);opacity:.85}
+.gs .num{font-weight:600}
+.dv{font-weight:700}
+.dv.up{color:var(--up)}
+.dv.dn{color:var(--down)}
+.pct{font-size:.82rem;color:var(--mut);text-align:right}
+.items{padding:0 .9rem .7rem 2.7rem}
+.ir{padding:.6rem 0;border-top:1px dashed var(--line)}
+.ir:first-child{border-top:0}
+.inm{display:flex;flex-direction:column;gap:.3rem;min-width:0}
+.inm b{font-weight:600;font-size:.9rem}
+.meta{display:flex;flex-wrap:wrap;gap:.3rem;align-items:center}
+.inm p{margin:0;font-size:.8rem;color:var(--mut);line-height:1.4}
+.inm p.ret{color:var(--ink)}
+.inm p.ret::before{content:"Ganho esperado: ";font-weight:700;color:var(--acc-2)}
+.inm p.mv{color:var(--acc-2);font-weight:600}
+.trips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem 1rem;font-size:.78rem;color:var(--mut);margin-top:.15rem}
+.trips div b{display:block;font:700 .6rem var(--head);letter-spacing:.14em;color:var(--ink);margin-bottom:.15rem}
+.trips ul{margin:0;padding-left:1rem}
+.ir .num{font-size:.88rem}
+.ir.saiu .inm b{color:var(--mut)}
+.tf{padding:.9rem;background:var(--ink);color:var(--bg);font-weight:700}
+.tf .num{font-weight:700}
+.tf .pct{color:var(--bg);opacity:.8}
+
+/* ---------- superintendências ---------- */
+.sb{display:flex;flex-direction:column}
+.srow{display:grid;grid-template-columns:minmax(0,15rem) minmax(0,1fr) 7rem;gap:1rem;align-items:center;padding:.65rem .4rem;border-bottom:1px solid var(--line);background:none;border-left:0;border-right:0;border-top:0;text-align:left;width:100%}
+.srow:nth-child(even){background:var(--soft)}
+.srow:hover{background:var(--acc-t)}
+.srow .sn{font-weight:600;font-size:.88rem;display:flex;gap:.5rem;align-items:center}
+.srow .sn i{width:.6rem;height:.6rem;border-radius:50%;background:var(--c);flex:none}
+.bars{display:flex;flex-direction:column;gap:.25rem}
+.bar{display:flex;align-items:center;gap:.5rem;font-size:.74rem;color:var(--mut);white-space:nowrap}
+.bar u{display:block;height:.75rem;min-width:2px;transition:width .7s cubic-bezier(.2,.7,.2,1)}
+.bar.a u{background:var(--acc-l);opacity:.55}
+.bar.b u{background:var(--acc)}
+.bar.b{color:var(--ink);font-weight:600}
+.srow .dv{text-align:right;white-space:nowrap}
+.sleg{display:flex;gap:1.2rem;font-size:.8rem;color:var(--mut);flex-wrap:wrap}
+.sleg i{display:inline-block;width:.9rem;height:.6rem;margin-right:.35rem;vertical-align:0}
+
+/* ---------- tecnologia ---------- */
+.tic{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1.1rem;align-items:stretch}
+.tch{padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.6rem}
+.tch svg{width:100%;height:auto;max-height:330px}
+.tch text{font-family:var(--head)}
+.tnews{display:flex;flex-direction:column;gap:.7rem;height:100%}
+.tn{flex:1;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.9rem;align-items:center;padding:.9rem 1.1rem}
+.tn .sq{width:2.6rem;height:2.6rem;background:var(--deep);color:var(--acc-l);display:grid;place-items:center;font:700 .9rem var(--head)}
+.tn b{display:block;font-size:.98rem}
+.tn span{font-size:.82rem;color:var(--mut)}
+.tn .v{font:300 1.5rem var(--head);white-space:nowrap;text-align:right}
+.tn .v small{display:block;font:500 .72rem var(--body);color:var(--mut)}
+
+/* ---------- entrou e saiu ---------- */
+.mvl{display:flex;flex-direction:column}
+.mvr{display:grid;grid-template-columns:2rem minmax(0,1fr) auto 8rem;gap:.9rem;align-items:center;padding:.65rem .3rem;border-bottom:1px solid var(--line)}
+.mvr:nth-child(even){background:var(--soft)}
+.mvr .rk{font:300 1.3rem var(--head);color:var(--acc)}
+.mvr b{font-size:.92rem;font-weight:600}
+.mvr p{margin:.15rem 0 0;font-size:.78rem;color:var(--mut)}
+.mvr .num{font-weight:700}
+
+/* ---------- notas ---------- */
+.notes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.nb{padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.6rem}
+.nb h3{margin:0;font:600 1rem var(--head)}
+.nb ul{margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:.45rem;font-size:.86rem;color:var(--mut)}
+.nb ul b{color:var(--ink)}
+.infl{display:flex;flex-direction:column;gap:.3rem;font-size:.8rem;max-height:none}
+.infl div:nth-child(even){background:var(--soft)}
+.infl div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.6rem;padding:.3rem 0;border-bottom:1px dashed var(--line)}
+
+/* ---------- janela ---------- */
+.modal{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding-block:calc(env(safe-area-inset-top,0px) + 1rem) calc(env(safe-area-inset-bottom,0px) + 1rem);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mbk{position:absolute;inset:0;background:rgba(3,28,43,.72);backdrop-filter:blur(5px)}
+.mdl{position:relative;width:min(980px,100%);max-height:100%;display:flex;flex-direction:column;background:var(--card);border-top:4px solid var(--acc);box-shadow:0 30px 90px rgba(0,0,0,.45)}
+.mhd{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.4rem;border-bottom:1px solid var(--line)}
+.mhd h3{margin:0;font:300 1.4rem var(--head)}
+.mx{flex:none;width:2.4rem;height:2.4rem;border:1px solid var(--ink);background:var(--card)}
+.mx:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
+.mbd{padding:1rem 1.4rem 1.4rem;overflow-y:auto;display:flex;flex-direction:column;gap:.8rem}
+.mbd h4{margin:.4rem 0 0;font:700 .66rem var(--head);letter-spacing:.16em;text-transform:uppercase;color:var(--acc-2)}
+
+/* ---------- animações ---------- */
+.rv{animation:rv .6s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0)*70ms + 120ms)}
+.slide:not(.on) .rv{animation:none}
+@keyframes rv{from{opacity:.001;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- responsivo ---------- */
+@media (max-width:980px){
+  .ov,.bhead,.tic,.notes{grid-template-columns:1fr}
+  .bksgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .legend,.steps3{grid-template-columns:1fr 1fr}
+}
+@media (max-width:760px){
+  .th{display:none}
+  .gs,.ir,.tf{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .gs .gn,.ir .inm,.tf>span:first-child{grid-column:1/-1}
+  .gs .pct,.ir .stc,.tf .pct{display:none}
+  .num::before{content:attr(data-l);display:block;font:600 .55rem var(--head);letter-spacing:.14em;color:var(--mut)}
+  .tf .num::before{color:var(--bg);opacity:.75}
+  .items{padding-left:.9rem}
+  .kpis{grid-template-columns:1fr}
+  .kpi+.kpi{border-left:0;border-top:1px solid var(--deep-2)}
+  .srow{grid-template-columns:1fr auto}
+  .srow .bars{grid-column:1/-1;grid-row:2}
+  .mvr{grid-template-columns:1.6rem minmax(0,1fr) auto}
+  .mvr .st{display:none}
+  .trips{grid-template-columns:1fr}
+  .brow{grid-template-columns:7rem minmax(0,1fr) 5.4rem}
+  .dots{display:none}
+  .nv{padding:0 .8rem;letter-spacing:.1em}
+  .tn{grid-template-columns:auto minmax(0,1fr)}
+  .tn .v{grid-column:1/-1;text-align:left}
+}
+@media (max-width:520px){.bksgrid,.legend,.steps3{grid-template-columns:1fr}.cov-foot{gap:1.4rem}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}}
+</style>
+
+<div class="prog" id="prog"></div>
+<header class="top"><span class="brand">DICOM · Orçamento 2027 x 2026</span></header>
+<main id="stage"></main>
+<button class="sh" id="sh" type="button" hidden>Role para ver mais ↓</button>
+<nav class="bot" aria-label="Navegação"><button class="nv" id="bPrev" type="button">← Anterior</button><div class="dots" id="dots"></div><span class="pos" id="pos"></span><button class="nv p" id="bNext" type="button">Próximo →</button></nav>
+
+<script>
+const D = {"SUPS": {"me": "Marketing Escolas e Unidades", "nd": "Sem detalhamento (ajuste de 2026)", "mi": "Marketing IDE", "pg": "Planejamento e Gestão", "cd": "Comunicação e Digital", "ir": "Inteligência e Relacionamento", "ia": "Transformação Digital, Dados e Inovação (Inovação e IA)", "gd": "Transformação Digital, Dados e Inovação (Governança de Dados)", "dir": "Diretoria", "cmp": "Compartilhado entre as áreas", "dti": "TI corporativa (serviço da DTI)"}, "BLOCKS": [{"id": "inst", "name": "Publicidade Institucional", "short": "Institucional", "src": "Aba Institucional (v1 2026 e v1 2027)", "what": "Campanhas do Vestibular e do Mestrado, mídia, assessoria de imprensa, eventos e ferramentas de comunicação pagas pela Presidência.", "groups": [{"id": "i-div", "code": "3.321.2.02.0004", "name": "Divulgação e publicidade (compra de mídia)", "desc": "Anúncios das campanhas e impulsionamento de conteúdo nas redes.", "items": [{"n": "Vestibular", "v26": 10000000.0, "v27": 11000000.0, "sup": ["me"], "note": "Campanha do Vestibular: +10%.", "inf": false}, {"n": "Mestrado Unificado", "v26": 6200000.0, "v27": 6820000.0, "sup": ["me"], "note": "Campanha do Mestrado: +10%. Em 2027, os R$ 321,5 mil que estavam no Contact Center voltaram para a campanha.", "inf": false}, {"n": "Mídia Always On (redes da FGV)", "v26": 170000.0, "v27": 180000.0, "sup": ["cd"], "note": "Impulsionamento contínuo das redes da FGV.", "inf": false}, {"n": "Mídia Always On das influenciadoras Gê e Maia", "v26": 80000.0, "v27": 70000.0, "sup": ["cd"], "note": "Em 2027 inclui a nova influenciadora digital Maia.", "inf": false, "n26": "Mídia Always On Gê"}, {"n": "Divulgação dos podcasts Impacto Social e Impacto em Movimento", "v26": 65600.0, "v27": 55000.0, "sup": ["cd"], "note": "Em 2026 eram 2 linhas (R$ 35,6 mil + R$ 30 mil); em 2027, uma só.", "inf": false}, {"n": "Impulsionamento do Radar FGV", "v26": 10000.0, "v27": 15000.0, "sup": ["cd"], "note": "Impulsionamento das novas séries de conteúdo.", "inf": false}, {"n": "Ranking IGC", "v26": 200000.0, "v27": 0.0, "sup": ["me"], "note": "Não se repete em 2027.", "inf": false}]}, {"id": "i-ass", "code": "3.321.1.02.0027", "name": "Assessorias e consultorias", "desc": "Empresas contratadas para imprensa, monitoramento e marcas.", "items": [{"n": "Insight (assessoria de imprensa)", "v26": 1424239.76, "v27": 1477933.59, "sup": ["cd"], "note": "Contrato vigente, reajustado.", "inf": false}, {"n": "I4 (monitoramento de notícias sobre a FGV)", "v26": 804567.6, "v27": 830152.83, "sup": ["cd"], "note": "Contrato vigente, reajustado.", "inf": false}, {"n": "Village (registro de marcas e patentes)", "v26": 0.0, "v27": 200000.0, "sup": ["cd"], "note": "Novo em 2027.", "inf": false}, {"n": "Projeto Lead Scoring (Gauge Stefanini)", "v26": 100000.0, "v27": 0.0, "sup": ["ir"], "note": "Projeto de 2026, não se repete.", "inf": false}]}, {"id": "i-pesq", "code": "CT-33211020003", "name": "Pesquisas de mercado", "desc": "Reserva para contratar pesquisas com candidatos, alunos e mercado.", "items": [{"n": "Reserva para pesquisas", "v26": 650000.0, "v27": 400000.0, "sup": ["ir"], "note": "Reserva reduzida em R$ 250 mil.", "inf": false}]}, {"id": "i-soft", "code": "3.321.2.02.0034", "name": "Licenças de software", "desc": "Programas e plataformas pagos por assinatura.", "items": [{"n": "Curupira (chatbot de atendimento)", "v26": 120000.0, "v27": 180000.0, "sup": ["ir"], "note": "+50% pela demanda do Vestibular e do Mestrado.", "inf": false}, {"n": "iCherry (Google Analytics 360)", "v26": 195587.15, "v27": 195587.15, "sup": ["cd"], "note": "Mesmo valor de 2026.", "inf": false}, {"n": "Emplifi (gestão das redes sociais)", "v26": 164951.47, "v27": 160000.0, "sup": ["cd"], "note": "Pequena redução.", "inf": false}, {"n": "Forebrain (pré-teste de campanhas com IA)", "v26": 0.0, "v27": 30000.0, "sup": ["ir"], "note": "Em 2026 estava na Coordenação RJ (R$ 25 mil); em 2027 passa para o Institucional.", "inf": false, "mv": "Veio da Coordenação RJ"}, {"n": "Progic (TV corporativa)", "v26": 14400.0, "v27": 15120.0, "sup": ["cd"], "note": "Reajuste de 5%.", "inf": false}, {"n": "Zenvia (envio de SMS)", "v26": 30500.0, "v27": 5000.0, "sup": ["ir"], "note": "Redução pelo baixo consumo.", "inf": false}, {"n": "Supermetrics (integração de dados de mídia)", "v26": 235796.0, "v27": 0.0, "sup": ["ir"], "note": "Contrato já pago até 2028: não entra em 2027.", "inf": false}, {"n": "Open AI (ChatGPT)", "v26": 18000.0, "v27": 0.0, "sup": ["ia"], "note": "Sai do Institucional.", "inf": false}, {"n": "Reserva para softwares", "v26": 3200.0, "v27": 39532.32, "sup": ["dir"], "note": "Ferramentas também orçadas na Tecnologia (TIC); o detalhe por ferramenta está na seção de Tecnologia. Em 2026, as ferramentas equivalentes somavam R$ 3,2 mil.", "inf": false, "kind": "reserva", "dup27": 39532.32}]}, {"id": "i-foto", "code": "3.321.2.02.0007", "name": "Fotografia, vídeo e gravação", "desc": "Produção de vídeos, banco de imagens e podcasts.", "items": [{"n": "Vídeos institucionais", "v26": 150000.0, "v27": 180000.0, "sup": ["cd"], "note": "Mais produção de vídeo.", "inf": false}, {"n": "Picture House / Shutterstock (banco de imagens)", "v26": 63800.0, "v27": 63803.67, "sup": ["cd"], "note": "Praticamente o mesmo valor.", "inf": false}, {"n": "Podcast Impacto em Movimento (produção)", "v26": 20000.0, "v27": 35000.0, "sup": ["cd"], "note": "Nova temporada.", "inf": false}, {"n": "Podcast Impacto Social (produção)", "v26": 14400.0, "v27": 20000.0, "sup": ["cd"], "note": "Temporada 4 (em 2026, temporada 3).", "inf": false}, {"n": "Lançamento do redesign da marca FGV", "v26": 150000.0, "v27": 0.0, "sup": ["cd"], "note": "Ação de 2026, não se repete.", "inf": false}]}, {"id": "i-even", "code": "3.321.2.02.0024", "name": "Eventos e recepções", "desc": "Buffet, estrutura e produção de eventos institucionais.", "items": [{"n": "Experiência FGV", "v26": 180000.0, "v27": 180000.0, "sup": ["cd"], "note": "Mesmo valor de 2026.", "inf": false}, {"n": "Seminário para Imprensa Internacional", "v26": 30000.0, "v27": 40000.0, "sup": ["cd"], "note": "9ª edição (em 2026, 8ª).", "inf": false}, {"n": "Premiações", "v26": 0.0, "v27": 30000.0, "sup": ["cd"], "note": "Novo: inscrições em premiações.", "inf": false}, {"n": "Ação Embaixadores", "v26": 0.0, "v27": 20000.0, "sup": ["cd"], "note": "Novo: programa de embaixadores da marca FGV.", "inf": false}, {"n": "Fórum Imprensa", "v26": 70000.0, "v27": 0.0, "sup": ["cd"], "note": "Não se repete em 2027.", "inf": false}]}, {"id": "i-ti", "code": "3.321.1.02.0028", "name": "Serviços técnicos de informática", "desc": "Serviços digitais contratados para presença da FGV na internet.", "items": [{"n": "Google Meu Negócio", "v26": 0.0, "v27": 179525.67, "sup": ["cd"], "note": "Novo: presença da FGV nas buscas e mapas do Google.", "inf": false}, {"n": "Wikipedia", "v26": 0.0, "v27": 51360.0, "sup": ["cd"], "note": "Novo: conteúdo e autoridade da FGV na Wikipedia.", "inf": false}]}, {"id": "i-imp", "code": "3.321.2.02.0044", "name": "Impressão e encadernação", "desc": "Materiais impressos das campanhas e da comunicação.", "items": [{"n": "Impressões (estimativa pelo consumo do ano anterior)", "v26": 54000.0, "v27": 90000.0, "sup": ["cd"], "note": "Estimativa maior, pelo consumo de 2026.", "inf": false}]}, {"id": "i-saas", "code": "3.321.1.02.0035", "name": "Software em nuvem (envio de e-mails)", "desc": "Serviços de envio e validação de e-mails para as réguas de relacionamento.", "items": [{"n": "MTM e Safetymails (envio e validação de e-mails)", "v26": 49800.0, "v27": 50000.0, "sup": ["ir"], "note": "Em 2026 eram 2 linhas (R$ 41,8 mil + R$ 8 mil); em 2027, uma só.", "inf": false}]}, {"id": "i-cria", "code": "3.321.2.02.0046", "name": "Comunicação e design", "desc": "Criação de peças gráficas pela agência BRJ.", "items": [{"n": "Agência BRJ (criação e design)", "v26": 30000.0, "v27": 35000.0, "sup": ["cd"], "note": "Estimativa pelo consumo.", "inf": false}]}, {"id": "i-trad", "code": "3.321.1.02.0023", "name": "Tradução e revisão", "desc": "Tradução de textos, relatórios e do FGV News.", "items": [{"n": "Traduções (FGV News, relatórios etc.)", "v26": 60000.0, "v27": 20000.0, "sup": ["cd"], "note": "Redução de R$ 40 mil.", "inf": false}]}, {"id": "i-cc", "code": "3.321.2.02.0056", "name": "Contact Center (atendimento telefônico)", "desc": "Atendimento por telefone a candidatos de mestrado e doutorado.", "items": [{"n": "Contact Center Mestrado e Doutorado", "v26": 0.0, "v27": 0.0, "sup": ["ir"], "note": "Os R$ 321,5 mil previstos aqui em 2027 foram devolvidos para a campanha do Mestrado Unificado.", "inf": false}]}]}, {"id": "rj", "name": "Coordenação DICOM · Rio de Janeiro", "short": "Coordenação RJ", "src": "Aba RJ e SP, centro de custo RJ (v1 2026 e v1 2027)", "what": "Custos do dia a dia da DICOM no Rio: estagiários, viagens, equipamentos, ferramentas, eventos internos e funcionamento do escritório.", "groups": [{"id": "r-soft", "code": "3.321.2.02.0034", "name": "Licenças de software", "desc": "Programas e plataformas pagos por assinatura.", "items": [{"n": "Runrun.it (gestão de tarefas e projetos)", "v26": 170640.6, "v27": 211239.6, "sup": ["pg"], "note": "Ajuste para o novo plano.", "inf": false}, {"n": "Reserva para softwares", "v26": 85414.74, "v27": 246500.01, "sup": ["dir"], "note": "Reserva da Coordenação RJ (R$ 36,1 mil) mais ferramentas também orçadas na Tecnologia (TIC). O detalhe por ferramenta está na seção de Tecnologia. Em 2026, as ferramentas equivalentes estavam listadas uma a uma e somavam R$ 85,4 mil.", "inf": false, "kind": "reserva", "dup27": 210437.17}, {"n": "Frisbie (automações)", "v26": 204000.0, "v27": 50000.0, "sup": ["ia"], "note": "Redução de R$ 154 mil.", "inf": false}, {"n": "Licenças LinkedIn (coleta de dados)", "v26": 3500.0, "v27": 3500.0, "sup": ["ir"], "note": "Mesmo valor.", "inf": false}, {"n": "BigQuery (consultas de dados no Google)", "v26": 48000.0, "v27": 0.0, "sup": ["ia"], "note": "Em 2027 passa a ser orçado na Tecnologia (TIC).", "inf": false, "mv": "Passou para Tecnologia"}, {"n": "Ferramenta para avaliação de desempenho", "v26": 30000.0, "v27": 0.0, "sup": ["pg"], "note": "Não entra em 2027.", "inf": false}, {"n": "Forebrain (pré-teste com IA)", "v26": 25000.0, "v27": 0.0, "sup": ["ir"], "note": "Em 2027 vai para o Institucional (R$ 30 mil).", "inf": false, "mv": "Passou para o Institucional"}, {"n": "Beehiiv ou Substack (newsletter)", "v26": 16602.88, "v27": 0.0, "sup": ["cd"], "note": "Não entra em 2027.", "inf": false}, {"n": "DeepL (traduções)", "v26": 4455.36, "v27": 0.0, "sup": ["cd"], "note": "Não entra em 2027.", "inf": false}, {"n": "Genspark (apoio ao redesign da marca)", "v26": 1305.6, "v27": 0.0, "sup": ["cd"], "note": "Não entra em 2027.", "inf": false}, {"n": "Vidnoz (vídeos com IA)", "v26": 840.0, "v27": 0.0, "sup": ["pg"], "note": "Não renovada pela área.", "inf": false}]}, {"id": "r-viag", "code": "3.323.3.03.0001 a 0004", "name": "Viagens nacionais", "desc": "Passagens, hospedagem, diárias e transporte das viagens no Brasil. Abra para ver as viagens de cada Superintendência.", "items": [{"n": "Viagens · Diretoria", "v26": 41000.0, "v27": 45000.0, "sup": ["dir"], "note": "", "inf": false, "trips26": [["Diretoria", 41000]], "trips27": [["Diretoria", 45000]]}, {"n": "Viagens · Comunicação e Digital", "v26": 20000.0, "v27": 49000.0, "sup": ["cd"], "note": "", "inf": false, "trips26": [["Superintendente de Comunicação e Digital", 15000], ["Criação: acompanhamento de grandes projetos e feiras", 5000]], "trips27": [["Superintendente de Comunicação e Digital", 20000], ["Comunicação Corporativa: seminário de imprensa, Impacto Social e prêmio", 14000], ["Focus Group em SP (2 edições)", 15000]]}, {"n": "Viagens · Inteligência e Relacionamento", "v26": 8000.0, "v27": 0.0, "sup": ["ir"], "note": "", "inf": false, "trips26": [["Education Summit (Google, Meta e TikTok)", 8000]], "trips27": []}, {"n": "Viagens · Transformação Digital, Dados e Inovação (Inovação e IA)", "v26": 30000.0, "v27": 0.0, "sup": ["ia"], "note": "", "inf": false, "trips26": [["Equipe de Inovação e IA: viagens ao RJ", 30000]], "trips27": []}, {"n": "Viagens · Planejamento e Gestão", "v26": 18000.0, "v27": 5000.0, "sup": ["pg"], "note": "", "inf": false, "trips26": [["Planejamento e Gestão: 3 frentes, 2 visitas a SP cada", 18000]], "trips27": [["Planejamento e Gestão: 2 viagens a SP", 5000]]}, {"n": "Viagens · Marketing IDE", "v26": 48000.0, "v27": 39500.0, "sup": ["mi"], "note": "", "inf": false, "trips26": [["Novo superintendente do IDE: integração com núcleos", 30000], ["IDE: visitas ao núcleo BH e eventos com veículos (4 viagens)", 18000]], "trips27": [["IDE: 10 viagens RJ–SP", 18000], ["IDE: 5 viagens RJ–BH", 10500], ["IDE: 5 viagens RJ–Brasília", 11000]]}, {"n": "Viagens · Marketing Escolas e Unidades", "v26": 0.0, "v27": 12000.0, "sup": ["me"], "note": "", "inf": false, "trips26": [], "trips27": [["Gerente de Brasília: eventos estratégicos", 12000]]}, {"n": "Viagens · Transformação Digital, Dados e Inovação (Governança de Dados)", "v26": 0.0, "v27": 3000.0, "sup": ["gd"], "note": "", "inf": false, "trips26": [], "trips27": [["Evento Gartner (SP)", 3000]]}]}, {"id": "r-viagi", "code": "3.323.4.03.0001 a 0004", "name": "Viagens internacionais", "desc": "Viagens ao exterior: nova conta em 2027, para eventos de dados e IA.", "items": [{"n": "Viagens · Transformação Digital, Dados e Inovação (Governança de Dados)", "v26": 0.0, "v27": 45000.0, "sup": ["gd"], "note": "", "inf": false, "trips26": [], "trips27": [["Google Cloud Next (Las Vegas)", 20000], ["IBM Think (Boston)", 25000]]}]}, {"id": "r-estg", "code": "3.321.1.01.0004", "name": "Estagiários", "desc": "Bolsas dos estagiários lotados no RJ.", "items": [{"n": "Estagiários do RJ", "v26": 144000.0, "v27": 198000.0, "sup": ["cmp"], "note": "De 8 estagiários para 9 atuais + 2 novos (11).", "inf": false}]}, {"id": "r-div", "code": "3.321.2.02.0004", "name": "Associações de mercado", "desc": "Anuidades de associações do mercado de comunicação e publicidade.", "items": [{"n": "ABA (Associação Brasileira de Anunciantes)", "v26": 0.0, "v27": 75000.0, "sup": ["pg"], "note": "Nova associação em 2027.", "inf": false}, {"n": "AMI / IAB (Associação de Mídia Interativa)", "v26": 43300.0, "v27": 47660.8, "sup": ["pg"], "note": "Reajuste de 10%.", "inf": false}, {"n": "Impulsionamento do Podcast CMO", "v26": 18000.0, "v27": 0.0, "sup": ["cd"], "note": "O podcast não continua em 2027.", "inf": false}]}, {"id": "r-info", "code": "3.326.0.01.0003", "name": "Equipamentos de informática", "desc": "Computadores e equipamentos para as equipes e para eventos.", "items": [{"n": "Computadores e notebooks para as equipes do RJ", "v26": 90000.0, "v27": 75000.0, "sup": ["cmp"], "note": "Redução de R$ 15 mil.", "inf": false}, {"n": "Totens de autocredenciamento para eventos (RJ)", "v26": 0.0, "v27": 20000.0, "sup": ["cd"], "note": "Novo: o participante faz o próprio credenciamento.", "inf": false}, {"n": "Totem com internet 5G para captar contatos em feiras (RJ)", "v26": 0.0, "v27": 12000.0, "sup": ["cd"], "note": "Novo.", "inf": false}, {"n": "Celular Samsung S26 Ultra (gravações para redes)", "v26": 0.0, "v27": 8000.0, "sup": ["cd"], "note": "Novo.", "inf": false}, {"n": "Microfone, ring lights e bastão de luz", "v26": 0.0, "v27": 1200.0, "sup": ["cd"], "note": "Novo: kit de gravação para redes sociais.", "inf": false}]}, {"id": "r-even", "code": "3.321.2.02.0024", "name": "Eventos e recepções", "desc": "Eventos internos e participação em congressos.", "items": [{"n": "Planejamento Estratégico da DICOM", "v26": 55000.0, "v27": 60000.0, "sup": ["pg"], "note": "Evento anual de planejamento.", "inf": false}, {"n": "Gartner Data & Analytics Summit (SP)", "v26": 0.0, "v27": 12600.0, "sup": ["gd"], "note": "Novo.", "inf": false}, {"n": "IBM Think (Boston)", "v26": 0.0, "v27": 9800.0, "sup": ["gd"], "note": "Novo: inscrição no evento.", "inf": false}, {"n": "Google Cloud Next (Las Vegas)", "v26": 0.0, "v27": 5155.0, "sup": ["gd"], "note": "Novo: inscrição no evento.", "inf": false}, {"n": "CPDP LatAm (privacidade e governança de dados)", "v26": 0.0, "v27": 699.0, "sup": ["gd"], "note": "Novo.", "inf": false}]}, {"id": "r-foto", "code": "3.321.2.02.0007", "name": "Fotografia, vídeo e gravação", "desc": "Produção de conteúdo audiovisual.", "items": [{"n": "Produção do Podcast CMO", "v26": 48000.0, "v27": 0.0, "sup": ["cd"], "note": "O podcast não continua em 2027.", "inf": false}]}, {"id": "r-mat", "code": "3.326.0.03.0099", "name": "Materiais diversos", "desc": "Materiais para eventos e para as equipes.", "items": [{"n": "Totens de sinalização em PVC para eventos", "v26": 15000.0, "v27": 0.0, "sup": ["cd"], "note": "Compra feita em 2026.", "inf": false}, {"n": "Drone para as equipes de redes sociais e vídeo", "v26": 3690.0, "v27": 0.0, "sup": ["cd"], "note": "Compra feita em 2026.", "inf": false}, {"n": "Prismas de mesa diretora", "v26": 2000.0, "v27": 0.0, "sup": ["cd"], "note": "Compra feita em 2026.", "inf": false}]}, {"id": "r-loc", "code": "3.321.2.02.0013", "name": "Aluguel de equipamentos", "desc": "Aluguel de impressoras e centrais telefônicas.", "items": [{"n": "Centrais telefônicas (aluguel)", "v26": 9500.0, "v27": 0.0, "sup": ["cmp"], "note": "Não orçado em 2027.", "inf": false}, {"n": "Impressoras Ricoh (rateio)", "v26": 6000.0, "v27": 1200.0, "sup": ["cmp"], "note": "Redução pelo consumo.", "inf": false}]}, {"id": "r-adm", "code": "Várias contas", "name": "Funcionamento do escritório", "desc": "Café, materiais, telefonia, limpeza, jardinagem e apoio administrativo.", "items": [{"n": "Café", "v26": 12000.0, "v27": 8000.0, "sup": ["cmp"], "note": "Custos de funcionamento do escritório.", "inf": false}, {"n": "Material de copa e cozinha", "v26": 4000.0, "v27": 1200.0, "sup": ["cmp"], "note": "Custos de funcionamento do escritório.", "inf": false}, {"n": "Jardinagem", "v26": 3700.0, "v27": 2400.0, "sup": ["cmp"], "note": "Custos de funcionamento do escritório.", "inf": false}, {"n": "Rateio de impressão (cópias)", "v26": 1900.0, "v27": 1200.0, "sup": ["cmp"], "note": "Custos de funcionamento do escritório.", "inf": false}, {"n": "Material de expediente", "v26": 1200.0, "v27": 1200.0, "sup": ["cmp"], "note": "Custos de funcionamento do escritório.", "inf": false}, {"n": "Telefonia / ramais", "v26": 0.0, "v27": 1200.0, "sup": ["cmp"], "note": "Em 2026 a linha existia, mas sem valor.", "inf": false}, {"n": "Papel e material gráfico", "v26": 1200.0, "v27": 0.0, "sup": ["cmp"], "note": "Não orçado em 2027.", "inf": false}, {"n": "Locação de pessoal administrativo", "v26": 3000.0, "v27": 0.0, "sup": ["cmp"], "note": "Não orçado em 2027.", "inf": false}, {"n": "Material de limpeza e higiene", "v26": 300.0, "v27": 0.0, "sup": ["cmp"], "note": "Não orçado em 2027.", "inf": false}, {"n": "Assinatura do jornal O Globo", "v26": 500.0, "v27": 500.0, "sup": ["cd"], "note": "Mesmo valor.", "inf": false}]}, {"id": "r-cap", "code": "3.321.1.02.0027", "name": "Capacitação", "desc": "Treinamento da equipe de dados.", "items": [{"n": "Capacitação na plataforma Google Cloud (2 pessoas)", "v26": 0.0, "v27": 3602.0, "sup": ["gd"], "note": "Novo.", "inf": false}]}]}, {"id": "sp", "name": "Coordenação DICOM · São Paulo", "short": "Coordenação SP", "src": "Aba RJ e SP, centro de custo SP (v1 2026 e v1 2027)", "what": "Custos do dia a dia da DICOM em São Paulo: estagiários, viagens, equipamentos, ferramentas, eventos e funcionamento do escritório.", "groups": [{"id": "s-info", "code": "3.326.0.01.0003", "name": "Equipamentos de informática", "desc": "Computadores e equipamentos para as equipes e para eventos.", "items": [{"n": "Notebooks para as equipes de SP", "v26": 30000.0, "v27": 75000.0, "sup": ["cmp"], "note": "Mais R$ 45 mil.", "inf": false}, {"n": "Totens de autocredenciamento para eventos (SP)", "v26": 0.0, "v27": 20000.0, "sup": ["cd"], "note": "Novo.", "inf": false}, {"n": "Totem com internet 5G para captar contatos em feiras (SP)", "v26": 0.0, "v27": 12000.0, "sup": ["cd"], "note": "Novo.", "inf": false}, {"n": "TV de 47\" para acompanhar o DCC em tempo real", "v26": 0.0, "v27": 6000.0, "sup": ["ia"], "note": "Novo.", "inf": false}, {"n": "3 impressoras de etiquetas para eventos", "v26": 0.0, "v27": 3500.0, "sup": ["cd"], "note": "Novo: credenciamento nos prédios de SP.", "inf": false}]}, {"id": "s-viag", "code": "3.323.3.03.0001 a 0004", "name": "Viagens nacionais", "desc": "Passagens, hospedagem, diárias e transporte das viagens no Brasil. Abra para ver as viagens de cada Superintendência.", "items": [{"n": "Viagens · Comunicação e Digital", "v26": 23000.0, "v27": 10000.0, "sup": ["cd"], "note": "", "inf": false, "trips26": [["Comunicação Corporativa: Impacto Social, prêmio e seminário", 18000], ["Eventos de Digital em SP", 5000]], "trips27": [["Eventos: Itaipava, RIW, cerimônia de medalhas e outros", 10000]]}, {"n": "Viagens · Marketing IDE", "v26": 18000.0, "v27": 0.0, "sup": ["mi"], "note": "", "inf": false, "trips26": [["IDE: visitas aos núcleos DF e SP (4 viagens)", 18000]], "trips27": []}, {"n": "Viagens · Marketing Escolas e Unidades", "v26": 44000.0, "v27": 70000.0, "sup": ["me"], "note": "", "inf": false, "trips26": [["Marketing Escolas: 8 viagens ao Rio", 34000], ["Marketing Escolas: gerência de Brasília a SP", 10000]], "trips27": [["Marketing Escolas: 10 viagens ao Rio e 2 a Brasília", 70000]]}, {"n": "Viagens · Transformação Digital, Dados e Inovação (Inovação e IA)", "v26": 0.0, "v27": 30000.0, "sup": ["ia"], "note": "", "inf": false, "trips26": [], "trips27": [["Equipe de Inovação e IA: viagens ao RJ", 30000]]}]}, {"id": "s-soft", "code": "3.321.2.02.0034", "name": "Licenças de software", "desc": "Programas e plataformas pagos por assinatura.", "items": [{"n": "Reserva para softwares", "v26": 5390.0, "v27": 60000.0, "sup": ["dir"], "note": "Reserva da Coordenação SP (R$ 35,5 mil) mais ferramentas de IA também orçadas na Tecnologia (TIC). O detalhe por ferramenta está na seção de Tecnologia. Em 2026, as ferramentas equivalentes somavam R$ 5,4 mil.", "inf": false, "kind": "reserva", "dup27": 24498}, {"n": "Figma (protótipos)", "v26": 3590.4, "v27": 0.0, "sup": ["cd"], "note": "Em 2027 segue na reserva de softwares da Coordenação RJ.", "inf": false, "mv": "Passou para a Coordenação RJ"}, {"n": "Gamma (apresentações com IA)", "v26": 800.0, "v27": 0.0, "sup": ["ia"], "note": "Não entra em 2027.", "inf": false}, {"n": "Magical (respostas automáticas do SAC)", "v26": 426.0, "v27": 0.0, "sup": ["ia"], "note": "Não entra em 2027.", "inf": false}, {"n": "CapCut Pro (edição de vídeo)", "v26": 384.0, "v27": 0.0, "sup": ["cd"], "note": "Em 2027 segue na reserva de softwares da Coordenação RJ.", "inf": false, "mv": "Passou para a Coordenação RJ"}, {"n": "Eleven Labs (narração com IA)", "v26": 360.0, "v27": 0.0, "sup": ["ia"], "note": "Não entra em 2027 em SP.", "inf": false}]}, {"id": "s-estg", "code": "3.321.1.01.0004", "name": "Estagiários", "desc": "Bolsas dos estagiários lotados em SP.", "items": [{"n": "Estagiários de SP", "v26": 72000.0, "v27": 60000.0, "sup": ["cmp"], "note": "De 4 para 2 estagiários.", "inf": false}]}, {"id": "s-even", "code": "3.321.2.02.0024", "name": "Eventos e treinamentos", "desc": "Participação em eventos e treinamentos.", "items": [{"n": "Eventos, treinamentos e summits da equipe de Inovação e IA", "v26": 0.0, "v27": 50000.0, "sup": ["ia"], "note": "Novo.", "inf": false}]}, {"id": "s-mat", "code": "3.326.0.03.0099", "name": "Materiais diversos", "desc": "Materiais e mobiliário para eventos.", "items": [{"n": "Mobiliário de palco para eventos (6 poltronas e 3 mesas)", "v26": 0.0, "v27": 15000.0, "sup": ["cd"], "note": "Novo.", "inf": false}, {"n": "Totens de sinalização (prédios Plínio Barreto e Picarolo)", "v26": 0.0, "v27": 5000.0, "sup": ["cd"], "note": "Novo.", "inf": false}, {"n": "Maleta para materiais de eventos", "v26": 500.0, "v27": 0.0, "sup": ["cd"], "note": "Compra feita em 2026.", "inf": false}]}, {"id": "s-amb", "code": "3.321.2.02.0046", "name": "Ambientação do escritório", "desc": "Ambientação e paisagismo do escritório de SP.", "items": [{"n": "Ambientação da DICOM SP", "v26": 0.0, "v27": 20000.0, "sup": ["cmp"], "note": "Novo.", "inf": false}]}, {"id": "s-loc", "code": "3.321.2.02.0013", "name": "Aluguel de equipamentos", "desc": "Aluguel de impressoras e centrais telefônicas.", "items": [{"n": "Centrais telefônicas (aluguel)", "v26": 6600.0, "v27": 0.0, "sup": ["cmp"], "note": "Não orçado em 2027.", "inf": false}, {"n": "Impressoras Ricoh (rateio)", "v26": 740.0, "v27": 600.0, "sup": ["cmp"], "note": "Redução pelo consumo.", "inf": false}]}, {"id": "s-adm", "code": "Várias contas", "name": "Funcionamento do escritório", "desc": "Café, materiais, telefonia, limpeza e apoio administrativo.", "items": [{"n": "Locação de pessoal administrativo", "v26": 1100.0, "v27": 2400.0, "sup": ["cmp"], "note": "Valor de 2026 ajustado.", "inf": false}, {"n": "Café", "v26": 3000.0, "v27": 3000.0, "sup": ["cmp"], "note": "Custos de funcionamento do escritório.", "inf": false}, {"n": "Telefonia / ramais", "v26": 1200.0, "v27": 1200.0, "sup": ["cmp"], "note": "Custos de funcionamento do escritório.", "inf": false}, {"n": "Material de copa e cozinha", "v26": 1000.0, "v27": 1200.0, "sup": ["cmp"], "note": "Custos de funcionamento do escritório.", "inf": false}, {"n": "Material de expediente", "v26": 600.0, "v27": 600.0, "sup": ["cmp"], "note": "Custos de funcionamento do escritório.", "inf": false}, {"n": "Rateio de impressão (cópias)", "v26": 950.0, "v27": 600.0, "sup": ["cmp"], "note": "Custos de funcionamento do escritório.", "inf": false}, {"n": "Papel e material gráfico", "v26": 600.0, "v27": 0.0, "sup": ["cmp"], "note": "Não orçado em 2027.", "inf": false}, {"n": "Material de limpeza e higiene", "v26": 150.0, "v27": 0.0, "sup": ["cmp"], "note": "Não orçado em 2027.", "inf": false}]}]}, {"id": "tic", "name": "Tecnologia e dados (TIC)", "short": "Tecnologia", "src": "2026: valor de referência R$ 3.088 mil (detalhe: Consolidado TIC v2 2026). 2027: Slide7 Tecnologia COMPLETO (R$ 5.005 mil)", "what": "Inteligência artificial, dados, CRM (Salesforce), sites e aplicativos, ferramentas das equipes e serviços de TI.", "groups": [{"id": "t-ia", "name": "Inteligência artificial e automação (DCC)", "code": "Novo em 2027", "desc": "Modelos de IA, servidores na nuvem e ferramentas que fazem o DICOM Command Center (DCC) e as automações funcionarem.", "items": [{"n": "Gemini API (Google)", "v26": 0.0, "v27": 583200.0, "sup": ["ia"], "note": "", "inf": false, "p": "Modelo de IA do Google usado em automações; alternativa por custo ou adequação.", "ret": "Capacidade de produção. Motor de geração das réguas, do Mail Guard e dos agentes do DCC. Medido por custo por peça entregue, com queda trimestral.", "nov": "novo", "nat": "OPEX", "src": ["Gemini API (Google)"], "prev": "Em 2026 havia R$ 6,4 mil previstos fora do Consolidado TIC."}, {"n": "Máquina virtual (DCC)", "v26": 0.0, "v27": 226800.0, "sup": ["ia"], "note": "", "inf": false, "p": "Computador na nuvem que hospeda os projetos de IA mais complexos, já em produção.", "ret": "Capacidade instalada. Opera o DCC em produção: 75 milhões de registros, 13 escolas, 7 áreas atendidas. Sem este item nenhuma entrega do bloco acontece.", "nov": "novo", "nat": "OPEX", "src": ["Máquina virtual (DCC)"]}, {"n": "Claude API (Anthropic)", "v26": 0.0, "v27": 216000.0, "sup": ["ia"], "note": "", "inf": false, "p": "Base técnica dos projetos de IA: desenvolvimento, automações e agentes.", "ret": "Capacidade de produção. Motor de geração das réguas, do Mail Guard e dos agentes do DCC. Medido por custo por peça entregue, com queda trimestral.", "nov": "novo", "nat": "OPEX", "src": ["Claude API (Anthropic)"], "prev": "Em 2026 havia R$ 19,2 mil previstos fora do Consolidado TIC."}, {"n": "Claude Max (desenvolvimento)", "v26": 0.0, "v27": 144000.0, "sup": ["ia"], "note": "", "inf": false, "p": "Assistente de IA para programadores; acelera entregas complexas.", "ret": "Produtividade. Sustenta o volume de entregas das 8 metas sem ampliar quadro, a custo por pessoa muito abaixo de uma contratação.", "nov": "novo", "nat": "OPEX", "src": ["Claude Max (desenvolvimento)"]}, {"n": "Cloud Run (MailGuard)", "v26": 0.0, "v27": 64800.0, "sup": ["ia"], "note": "", "inf": false, "p": "Hospedagem de projetos menores; o MailGuard (correção de campanhas) roda aqui.", "ret": "Capacidade instalada. Sustenta o Mail Guard, que entrega 1.300 e-mails personalizados por clique e substituiu a agência na produção das réguas.", "nov": "novo", "nat": "OPEX", "src": ["Cloud Run (MailGuard)"], "prev": "Em 2026 havia R$ 7,8 mil previstos fora do Consolidado TIC."}, {"n": "OpenAI API", "v26": 0.0, "v27": 54000.0, "sup": ["ia"], "note": "", "inf": false, "p": "Complementa os demais; já é a API principal em tarefas como desenvolvimento de campanhas.", "ret": "Capacidade de produção. Mantém campanhas e automações em operação com mais de um provedor, sem reescrever projeto.", "nov": "novo", "nat": "OPEX", "src": ["OpenAI API"], "prev": "Em 2026, o ChatGPT estava no Institucional (R$ 18 mil)."}, {"n": "Comparativos e inovações", "v26": 0.0, "v27": 54000.0, "sup": ["ia"], "note": "", "inf": false, "p": "Teste de vários modelos de IA ao mesmo tempo, para escolher o melhor.", "ret": "Eficiência. Decide por evidência onde alocar os R$ 910 mil de APIs, migrando para o modelo mais barato que atende.", "nov": "novo", "nat": "OPEX", "src": ["Comparativos e inovações"]}, {"n": "Cloud SQL", "v26": 0.0, "v27": 48600.0, "sup": ["ia"], "note": "", "inf": false, "p": "Guarda e processa as bases de dados dos projetos de IA.", "ret": "Capacidade instalada. Base única governada que alimenta o DCC e torna o indicador auditável.", "nov": "novo", "nat": "OPEX", "src": ["Cloud SQL"]}, {"n": "Grok API", "v26": 0.0, "v27": 21600.0, "sup": ["ia"], "note": "", "inf": false, "p": "Reserva de contingência, se um provedor principal sair do ar.", "ret": "Continuidade. Troca de provedor sem parar a operação. O conjunto de alternativas custa 6% do bloco de APIs e protege os outros 94%.", "nov": "novo", "nat": "OPEX", "src": ["Grok API"]}, {"n": "APIs chinesas", "v26": 0.0, "v27": 21600.0, "sup": ["ia"], "note": "", "inf": false, "p": "Segunda reserva de contingência, a menor custo.", "ret": "Continuidade. Segunda alternativa, de menor custo, contra indisponibilidade ou reajuste do provedor principal.", "nov": "novo", "nat": "OPEX", "src": ["APIs chinesas"]}, {"n": "Claude Pro (desenvolvimento)", "v26": 0.0, "v27": 10800.0, "sup": ["ia"], "note": "", "inf": false, "p": "Versão para parte da equipe de desenvolvimento.", "ret": "Produtividade. Licença dimensionada por perfil de uso, para não pagar plano alto a quem não precisa.", "nov": "novo", "nat": "OPEX", "src": ["Claude Pro (desenvolvimento)"]}, {"n": "DeepSeek API", "v26": 0.0, "v27": 7200.0, "sup": ["ia"], "note": "", "inf": false, "p": "Custo muito baixo, para tarefas de menor criticidade.", "ret": "Eficiência. Absorve as tarefas de menor criticidade a custo marginal e derruba o custo médio por tarefa.", "nov": "novo", "nat": "OPEX", "src": ["DeepSeek API"]}, {"n": "Qwen API", "v26": 0.0, "v27": 7200.0, "sup": ["ia"], "note": "", "inf": false, "p": "Mesma lógica: custo baixo e alternativa aberta.", "ret": "Eficiência. Segundo fornecedor de baixo custo para rotina, mantém o preço sob concorrência.", "nov": "novo", "nat": "OPEX", "src": ["Qwen API"]}, {"n": "n8n", "v26": 0.0, "v27": 4000.0, "sup": ["ia"], "note": "", "inf": false, "p": "Plataforma para montar automações rapidamente, sem programar cada fluxo.", "ret": "Produtividade. Automação montada sem desenvolvimento do zero, ferramenta para o Núcleo de Automação Inteligente.", "nov": "novo", "nat": "OPEX", "src": ["n8n"], "prev": "Em 2026 estava na Coordenação SP (R$ 3,95 mil).", "mv": "Veio de outra área"}, {"n": "Traycer", "v26": 0.0, "v27": 2448.0, "sup": ["ia"], "note": "", "inf": false, "p": "Organiza planejamento e verificação do código em projetos grandes, como o DCC.", "ret": "Eficiência. Planejamento e revisão de código em projetos grandes como o DCC, reduz retrabalho e falha em produção.", "nov": "novo", "nat": "OPEX", "src": ["Traycer"]}, {"n": "Cursor", "v26": 0.0, "v27": 1953.0, "sup": ["ia"], "note": "", "inf": false, "p": "Editor de código com agentes de IA.", "ret": "Produtividade. Desenvolvimento diário assistido por agentes, encurta o ciclo de cada entrega.", "nov": "novo", "nat": "OPEX", "src": ["Cursor"], "prev": "Em 2026 estava na Coordenação SP (R$ 1,4 mil).", "mv": "Veio de outra área"}, {"n": "Kimi", "v26": 0.0, "v27": 900.0, "sup": ["ia"], "note": "", "inf": false, "p": "Assistente alternativo para ler documentos e códigos longos.", "ret": "Eficiência. Leitura de documentos e códigos longos a custo marginal, sem consumir modelo caro na tarefa.", "nov": "novo", "nat": "OPEX", "src": ["Kimi"]}, {"n": "Tactiq", "v26": 0.0, "v27": 797.0, "sup": ["ia"], "note": "", "inf": false, "p": "Transcreve reuniões em atas e tarefas.", "ret": "Produtividade. Reunião vira ata e tarefa automaticamente, com rastro de decisão e sem registro manual.", "nov": "novo", "nat": "OPEX", "src": ["Tactiq"]}]}, {"id": "t-gd", "name": "Governança de dados", "code": "Novo em 2027", "desc": "Organiza, protege e rastreia os dados que a IA e os painéis usam. Frente nova em 2027.", "items": [{"n": "Catálogo de dados (Knowledge Catalog)", "v26": 0.0, "v27": 24000.0, "sup": ["gd"], "note": "", "inf": false, "p": "Inventário de cada base de dados, com responsável e classificação.", "ret": "Catalogar e controlar no GCP as bases de interesse (ex. SIGA, CACR e LYCEUM, etc, os dados de GA4 e Supermetrics) que alimentarão o Knowledge Graph FGV em nuvem. Para a LLM, o  Catalog define quais dados podem ser usados no treinamento da IA.", "nov": "novo", "nat": "OPEX", "src": ["Catálogo de dados (Knowledge Catalog)"]}, {"n": "Proteção de dados pessoais (Cloud DLP)", "v26": 0.0, "v27": 19200.0, "sup": ["gd"], "note": "", "inf": false, "p": "Identifica e protege dados sensíveis, em conformidade com a LGPD.", "ret": "Identifica e classifica dados pessoais e sensíveis nas bases de SIGA, CACR e LYCEUM, GA4 e Supermetrics, e etc... antes que cheguem ao Knowledge Graph FGV e à LLM, aplicando mascaramento, anonimização ou bloqueio conforme o nível de classificação. Dá cumprimento prático à Política de Governança de IA da FGV,", "nov": "novo", "nat": "OPEX", "src": ["Proteção de dados pessoais (Cloud DLP)"]}, {"n": "Registro e monitoramento", "v26": 0.0, "v27": 12000.0, "sup": ["gd"], "note": "", "inf": false, "p": "Registra o uso e acompanha o desempenho da plataforma.", "ret": "Corresponde a três serviços de auditoria: 1) Cloud Logging: guarda os logs de cargas, consultas, acessos e erros. 2) Cloud Monitoring: acompanha desempenho e disponibilidade, com painéis e alertas de falha. 3) Cloud Audit Logs: registra quem acessou ou alterou cada dado e cada configuração, a trilha de auditoria.", "nov": "novo", "nat": "OPEX", "src": ["Registro e monitoramento"]}, {"n": "Claude Pro (arquitetura da informação)", "v26": 0.0, "v27": 10000.0, "sup": ["gd"], "note": "", "inf": false, "p": "Licenças para a gerência de arquitetura e governança.", "ret": "Escalar o uso de dados de interesse da DICOM-FGV,  prospectar e testar cenários de expansão sob incerteza antes de decidir, selecionando os dados estrategicamente e priorizando arquiteturas eficientes, otimizadas seguras.", "nov": "novo", "nat": "OPEX", "src": ["Claude Pro (arquitetura da informação)"]}, {"n": "Rastreio da origem (Data Lineage)", "v26": 0.0, "v27": 7200.0, "sup": ["gd"], "note": "", "inf": false, "p": "Mostra de onde vem cada dado e por onde passou.", "ret": "Permite saber quais fontes sustentaram cada resposta ou insight no DCC, auditar o uso de dados no treinamento e na consulta e bloquear com precisão uma fonte suspensa ou sem base legal. ", "nov": "novo", "nat": "OPEX", "src": ["Rastreio da origem (Data Lineage)"]}, {"n": "Armazenamento e backup (Data Lake)", "v26": 0.0, "v27": 6000.0, "sup": ["gd"], "note": "", "inf": false, "p": "Guarda os dados em camadas: brutos, tratados e confiáveis.", "ret": "Criação de um ambiente de dados em nuvem, em camadas (brutos, tratados e confiáveis, classificados em nível 1 a 4), com alta disponibilidade em nuvem. Será integrada ao FGV Datalake da DTI, e prevê integração via API e também consumo de bases de dados externas. Em 2027, iniciará com as bases do v1.0 (GA4, funil oficial, mídia paga, Market Cloud, SEMrush e GeoCapes), permite criar datasets intermediários reutilizáveis e deixar a estrutura pronta para integrar as próximas bases. ", "nov": "novo", "nat": "OPEX", "src": ["Armazenamento e backup (Data Lake)"]}, {"n": "Chaves de criptografia (Cloud KMS)", "v26": 0.0, "v27": 6000.0, "sup": ["gd"], "note": "", "inf": false, "p": "Guarda as chaves que protegem os dados.", "ret": "Guarda as chaves de criptografia das bases de Nível 3 e dos resultados consolidados do DCC e prevê o uso para dados de Nível 4, ultraconfidenciais conforme a NP TI.03.001.2024. Nenhuma fonte do v1.0 está hoje nesse nível. A previsão é desenvolver e testar uma arquitetura sigilosa de referência, com chaves de gestão restrita, acesso mínimo e trilha de auditoria, que sirva de modelo para projetos futuros. O uso de dados de Nível 4 depende de autorização da Presidência.", "nov": "novo", "nat": "OPEX", "src": ["Chaves de criptografia (Cloud KMS)"]}, {"n": "Claude Premium (governança de dados)", "v26": 0.0, "v27": 6000.0, "sup": ["gd"], "note": "", "inf": false, "p": "Apoia modelagem, documentação e análise de metadados.", "ret": "Acelera a modelagem, a documentação e a análise de metadados das bases do DCC (dados históricos, não estruturados, externos, GA4 e Supermetrics e outros). Como a maioria dos dados da FGV não tem metadados identificados, o uso de IA é essencial para levantar, descrever e padronizar campos, relações e significados em escala, o que seria inviável apenas de forma manual.", "nov": "novo", "nat": "OPEX", "src": ["Claude Premium (governança de dados)"]}, {"n": "Segurança e rede", "v26": 0.0, "v27": 4800.0, "sup": ["gd"], "note": "", "inf": false, "p": "Conexão segura entre os ambientes.", "ret": "Para o DCC, cria um túnel criptografado com alta disponibilidade, o investimento prevê o conjunto inicial é o Cloud VPN (HA VPN), o Secret Manager, que protege as credenciais de API, e o VPC Service Controls, que cria um perímetro de proteção e libera o acesso por perfil conforme o nível de classificação e para toda entrada de dados externos, por API ou web scraping (notícias e mídia)", "nov": "novo", "nat": "OPEX", "src": ["Segurança e rede"]}]}, {"id": "t-crm", "name": "CRM e relacionamento com candidatos (Salesforce)", "code": "Renovação", "desc": "Sistema onde ficam os contatos dos candidatos e de onde saem e-mails, SMS e WhatsApp automáticos, mais o cadastro único de contatos.", "items": [{"n": "WhatsApp no Marketing Cloud", "v26": 239000.0, "v27": 511200.0, "sup": ["ir"], "note": "Item que mais cresce no CRM.", "inf": false, "p": "Permite enviar mensagens ativas por WhatsApp pelo Salesforce; é o item que mais cresceu (+R$ 272 mil).", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["WhatsApp no Marketing Cloud"]}, {"n": "Marketing Cloud", "v26": 406000.0, "v27": 434400.0, "sup": ["ir"], "note": "", "inf": false, "p": "Módulo que envia e-mails, SMS e jornadas automáticas aos candidatos.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Marketing Cloud"]}, {"n": "Licenciamento por contatos (1,8 milhão, 3 anos)", "v26": 270000.0, "v27": 288900.0, "sup": ["ir"], "note": "", "inf": false, "p": "Direito de manter 1,8 milhão de contatos na plataforma.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Licenciamento por contatos (1,8 milhão, 3 anos)"]}, {"n": "Suporte Selbetti", "v26": 174005.8, "v27": 185981.0, "sup": ["ir"], "note": "", "inf": false, "n26": "Suporte MD2 (cadastro único)", "p": "Serviço de suporte do cadastro único de CRM.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Suporte Selbetti"]}, {"n": "Plataforma Salesforce para CRM corporativo", "v26": 150000.0, "v27": 160500.0, "sup": ["ir"], "note": "", "inf": false, "p": "Sistema em que ficam cadastros e histórico dos candidatos.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Plataforma Salesforce para CRM corporativo"]}, {"n": "Advertising Studio", "v26": 160000.0, "v27": 160000.0, "sup": ["ir"], "note": "", "inf": false, "p": "Usa públicos do CRM para segmentar anúncios.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Advertising Studio"]}, {"n": "Mão de obra própria da FGV (CRM)", "v26": 147490.56, "v27": 149558.0, "sup": ["ir"], "note": "", "inf": false, "p": "Horas da equipe da FGV alocadas ao projeto; não é pagamento a fornecedor.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Mão de obra própria", "CRM corporativo (Salesforce): mão de obra"]}, {"n": "Suporte InfoSphere", "v26": 92324.1, "v27": 119988.0, "sup": ["ir"], "note": "", "inf": false, "p": "Suporte do sistema que unifica os cadastros.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Suporte InfoSphere"]}, {"n": "Mão de obra própria da FGV (cadastro único)", "v26": 46817.72, "v27": 58359.0, "sup": ["ir"], "note": "", "inf": false, "p": "Horas da equipe da FGV.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Mão de obra própria (cadastro único)", "Cadastro único (MDM): mão de obra"]}]}, {"id": "t-dad", "name": "Plataformas de dados e BI", "code": "Renovação", "desc": "Onde os dados de sites, mídia e alunos são guardados e analisados, e os painéis de BI.", "items": [{"n": "Google Cloud (Inteligência de Mercado, Digital e IA)", "v26": 60000.0, "v27": 172800.0, "sup": ["ir", "cd"], "note": "Em 2026: contrato de nuvem Google (R$ 60 mil).", "inf": false, "p": "Recebe e guarda dados de tráfego dos sites e de mídia; roda modelos estatísticos em produção.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Google Cloud (Inteligência de Mercado, Digital e IA)"], "prev": "Em 2026, o BigQuery também estava na Coordenação RJ (R$ 48 mil)."}, {"n": "Microsoft Fabric", "v26": 112800.0, "v27": 121339.7, "sup": ["ir"], "note": "", "inf": false, "p": "Reúne engenharia de dados e Power BI; sustenta dashboards com cerca de 200 acessos por dia.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Microsoft Fabric"]}, {"n": "Sustentação dos sistemas de BI", "v26": 114850.51, "v27": 103550.0, "sup": ["gd"], "note": "Em 2026: 3 projetos de BI.", "inf": false, "p": "Mão de obra própria: mantém os painéis.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Sustentação dos sistemas de BI"]}]}, {"id": "t-sit", "name": "Sites, aplicativos e eventos", "code": "Renovação", "desc": "Manutenção dos sites (Vestibular, Mestrado, Drupal), dos aplicativos FGV e do sistema de inscrição em eventos (Even3).", "items": [{"n": "Demandas gerais via DICOM (sites)", "v26": 107282.88, "v27": 86675.0, "sup": ["cd"], "note": "", "inf": false, "p": "Mão de obra própria.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Demandas gerais via DICOM (sites)"]}, {"n": "Aplicativo FGV (Smart Retail), pessoal terceiro", "v26": 0.0, "v27": 81600.0, "sup": ["cd"], "note": "", "inf": false, "p": "Único investimento (CAPEX) relevante do grupo.", "ret": "", "nov": "novo", "nat": "CAPEX", "src": ["Aplicativo FGV (Smart Retail), pessoal terceiro"]}, {"n": "Sites em Drupal: manutenção do ambiente", "v26": 46203.16, "v27": 74887.0, "sup": ["cd"], "note": "", "inf": false, "p": "Mão de obra própria.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Sites em Drupal: manutenção do ambiente"]}, {"n": "Assinatura do software (SaaS)", "v26": 58200.0, "v27": 58200.0, "sup": ["cd"], "note": "", "inf": false, "n26": "Even3: assinatura", "p": "Plataforma de inscrição em eventos.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Assinatura do software (SaaS)"]}, {"n": "Aplicativos móveis FGV", "v26": 82273.52, "v27": 49528.0, "sup": ["cd"], "note": "", "inf": false, "p": "Mão de obra própria.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Aplicativos móveis FGV"]}, {"n": "Taxa de utilização de eventos pagos", "v26": 30450.0, "v27": 36000.0, "sup": ["cd"], "note": "", "inf": false, "n26": "Even3: taxa de eventos pagos", "p": "Cobrança por evento pago.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Taxa de utilização de eventos pagos"]}, {"n": "Mão de obra própria: implementação", "v26": 23685.76, "v27": 34733.0, "sup": ["cd"], "note": "", "inf": false, "p": "Mão de obra da FGV na implementação das vendas recorrentes por cartão.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Mão de obra própria: implementação"]}, {"n": "Vendas recorrentes por cartão: implementação", "v26": 30000.0, "v27": 30000.0, "sup": ["cd"], "note": "", "inf": false, "p": "CAPEX.", "ret": "", "nov": "renov", "nat": "CAPEX", "src": ["Vendas recorrentes por cartão: implementação"]}, {"n": "Site do Vestibular: sustentação", "v26": 49489.06, "v27": 24764.0, "sup": ["cd"], "note": "", "inf": false, "n26": "Vestibulares (CACR)", "p": "Mão de obra própria.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Site do Vestibular: sustentação"]}, {"n": "Site do Mestrado Unificado: sustentação", "v26": 0.0, "v27": 24764.0, "sup": ["cd"], "note": "", "inf": false, "p": "Mão de obra própria.", "ret": "", "nov": "novo", "nat": "OPEX", "src": ["Site do Mestrado Unificado: sustentação"]}, {"n": "Mão de obra própria: sustentação", "v26": 75237.12, "v27": 5789.0, "sup": ["cd"], "note": "", "inf": false, "n26": "Even3: sustentação", "p": "Mão de obra da FGV na sustentação do sistema de inscrição de eventos.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Mão de obra própria: sustentação"]}, {"n": "Site Sharepoint (portal e chamados)", "v26": 2805.36, "v27": 2311.0, "sup": ["cd"], "note": "Em 2026: 3 linhas de Sharepoint.", "inf": false, "p": "Rateio com a FGV.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Site Sharepoint (portal e chamados)"]}, {"n": "Manutenção do aplicativo mobile (pessoal terceiro)", "v26": 80340.79, "v27": 0.0, "sup": ["cd"], "note": "Linha de 2026 sem correspondente em 2027.", "inf": false, "p": "Serviço de manutenção do aplicativo mobile corporativo.", "ret": "", "nov": "saiu", "nat": "OPEX", "src": []}]}, {"id": "t-fer", "name": "Ferramentas do dia a dia das equipes", "code": "Renovação + novos", "desc": "Licenças de criação, pesquisa e SEO, assistentes de IA, processos e gravação de ligações. Inclui as ferramentas que aparecem como \"Reserva para softwares\" na Coordenação e no Institucional.", "items": [{"n": "Semrush (ampliado)", "v26": 0.0, "v27": 85796.2, "sup": ["cd"], "note": "", "inf": false, "p": "Análise de SEO e GEO, com dados de concorrentes.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Semrush (ampliado)"], "prev": "Em 2026 estava na Coordenação RJ (R$ 52,8 mil).", "mv": "Veio de outra área"}, {"n": "Gravação das ligações do atendimento", "v26": 0.0, "v27": 37732.32, "sup": ["ir"], "note": "", "inf": false, "p": "12 atendentes (8 do institucional e 4 do mestrado); cobrança mensal por atendente.", "ret": "", "nov": "novo", "nat": "OPEX", "src": ["Gravação das ligações do atendimento"]}, {"n": "Adobe Creative Cloud (RJ e SP)", "v26": 19942.68, "v27": 36321.87, "sup": ["cd"], "note": "", "inf": false, "p": "Edição de imagens, vídeos e peças.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Adobe Creative Cloud (RJ e SP)"]}, {"n": "Claude Premium (Marketing IDE)", "v26": 0.0, "v27": 26400.0, "sup": ["mi"], "note": "", "inf": false, "p": "Análise de dados e criação de apresentações.", "ret": "", "nov": "novo", "nat": "OPEX", "src": ["Claude Premium (Marketing IDE)"]}, {"n": "Claude Premium (Inteligência de Mercado)", "v26": 0.0, "v27": 22500.0, "sup": ["ir"], "note": "", "inf": false, "p": "Apoio a análises, códigos e documentação.", "ret": "", "nov": "novo", "nat": "OPEX", "src": ["Claude Premium (Inteligência de Mercado)"]}, {"n": "Flow Veo 3 (Google)", "v26": 0.0, "v27": 14518.8, "sup": ["cd"], "note": "", "inf": false, "p": "Edição de vídeos para redes e comunicação corporativa.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Flow Veo 3 (Google)"], "prev": "Em 2026 estava na Coordenação RJ (R$ 12 mil).", "mv": "Veio de outra área"}, {"n": "Lovable", "v26": 0.0, "v27": 10967.04, "sup": ["cd"], "note": "", "inf": false, "p": "Criação de sites e peças interativas sem programar.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Lovable"]}, {"n": "Claude Premium (Planejamento e Gestão)", "v26": 0.0, "v27": 10000.0, "sup": ["pg"], "note": "", "inf": false, "p": "Fluxos, procedimentos e documentos.", "ret": "", "nov": "novo", "nat": "OPEX", "src": ["Claude Premium (Planejamento e Gestão)"]}, {"n": "Copilot M365 Edu (Marketing IDE)", "v26": 0.0, "v27": 8595.6, "sup": ["mi"], "note": "", "inf": false, "p": "Atas, organização e produtividade.", "ret": "", "nov": "novo", "nat": "OPEX", "src": ["Copilot M365 Edu (Marketing IDE)"]}, {"n": "Microsoft Visio Plan 2", "v26": 0.0, "v27": 6803.28, "sup": ["pg"], "note": "", "inf": false, "p": "Mapeamento e documentação de processos.", "ret": "", "nov": "novo", "nat": "OPEX", "src": ["Microsoft Visio Plan 2"]}, {"n": "Adspirer", "v26": 0.0, "v27": 6000.0, "sup": ["mi"], "note": "", "inf": false, "p": "IA para análise e otimização de mídia.", "ret": "", "nov": "novo", "nat": "OPEX", "src": ["Adspirer"]}, {"n": "StreamYard", "v26": 0.0, "v27": 3622.5, "sup": ["cd"], "note": "", "inf": false, "p": "Transmissões ao vivo de eventos.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["StreamYard"], "prev": "Em 2026 estava na Coordenação RJ (R$ 4,1 mil).", "mv": "Veio de outra área"}, {"n": "Figma", "v26": 0.0, "v27": 3110.4, "sup": ["cd"], "note": "", "inf": false, "p": "Design de peças e desdobramento de campanhas.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Figma"], "prev": "Em 2026 estava na Coordenação SP (R$ 3,6 mil).", "mv": "Veio de outra área"}, {"n": "Ferramenta para a área de Processos", "v26": 0.0, "v27": 3000.0, "sup": ["pg"], "note": "", "inf": false, "p": "Rotinas de processos e automações.", "ret": "", "nov": "novo", "nat": "OPEX", "src": ["Ferramenta para a área de Processos"], "prev": "Em 2026 estava na Coordenação RJ (R$ 2,5 mil).", "mv": "Veio de outra área"}, {"n": "SuperSaaS", "v26": 0.0, "v27": 2887.5, "sup": ["cd"], "note": "", "inf": false, "p": "Agenda online de eventos.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["SuperSaaS"], "prev": "Em 2026 estava na Coordenação RJ (R$ 2,9 mil).", "mv": "Veio de outra área"}, {"n": "Freepik", "v26": 0.0, "v27": 2331.0, "sup": ["cd"], "note": "", "inf": false, "p": "Imagens para a personagem Gê.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Freepik"], "prev": "Em 2026 estava na Coordenação RJ (R$ 2,2 mil).", "mv": "Veio de outra área"}, {"n": "Visio", "v26": 0.0, "v27": 2267.76, "sup": ["pg"], "note": "", "inf": false, "p": "Fluxogramas de processos.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Visio"], "prev": "Em 2026 estava na Coordenação RJ (R$ 2,3 mil).", "mv": "Veio de outra área"}, {"n": "Higgsfield", "v26": 0.0, "v27": 2039.76, "sup": ["cd"], "note": "", "inf": false, "p": "Vídeos da personagem Gê.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Higgsfield"], "prev": "Em 2026 estava na Coordenação RJ (R$ 1,9 mil).", "mv": "Veio de outra área"}, {"n": "ChatGPT corporativo", "v26": 0.0, "v27": 2000.0, "sup": ["pg"], "note": "", "inf": false, "p": "Apoio à gestão de pessoas, com tratamento seguro de dados sensíveis.", "ret": "", "nov": "novo", "nat": "OPEX", "src": ["ChatGPT corporativo"]}, {"n": "CapCut (duas licenças)", "v26": 248.99, "v27": 1689.82, "sup": ["cd"], "note": "", "inf": false, "p": "Edição de vídeos.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["CapCut (duas licenças)"]}, {"n": "Wondercraft", "v26": 0.0, "v27": 1627.5, "sup": ["cd"], "note": "", "inf": false, "p": "Correção de áudio do Radar FGV.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Wondercraft"]}, {"n": "Screaming Frog", "v26": 0.0, "v27": 1517.76, "sup": ["cd"], "note": "", "inf": false, "p": "Auditoria de SEO nos sites da FGV.", "ret": "", "nov": "novo", "nat": "OPEX", "src": ["Screaming Frog"], "prev": "Em 2026 estava na Coordenação RJ (R$ 1,5 mil).", "mv": "Veio de outra área"}, {"n": "ElevenLabs", "v26": 0.0, "v27": 1507.97, "sup": ["cd"], "note": "", "inf": false, "p": "Narração com IA.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["ElevenLabs"], "prev": "Em 2026 estava na Coordenação RJ (R$ 1,4 mil).", "mv": "Veio de outra área"}, {"n": "Microsoft 365 Copilot", "v26": 0.0, "v27": 1236.36, "sup": ["pg"], "note": "", "inf": false, "p": "Documentos, relatórios e apresentações.", "ret": "", "nov": "novo", "nat": "OPEX", "src": ["Microsoft 365 Copilot"]}, {"n": "Envato Elements", "v26": 0.0, "v27": 1196.65, "sup": ["cd"], "note": "", "inf": false, "p": "Recursos criativos para vídeos.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Envato Elements"], "prev": "Em 2026 estava no Institucional (R$ 1,3 mil).", "mv": "Veio de outra área"}, {"n": "Canva PRO+", "v26": 0.0, "v27": 1176.0, "sup": ["cd"], "note": "", "inf": false, "p": "Peças com as fontes da FGV.", "ret": "", "nov": "novo", "nat": "OPEX", "src": ["Canva PRO+"]}, {"n": "Network Solutions", "v26": 703.59, "v27": 952.59, "sup": ["cd"], "note": "", "inf": false, "p": "Registro de domínios e hospedagem de páginas.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Network Solutions"]}, {"n": "Organimi", "v26": 0.0, "v27": 913.0, "sup": ["pg"], "note": "", "inf": false, "p": "Organograma.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Organimi"], "prev": "Em 2026 estava na Coordenação RJ (R$ 0,8 mil).", "mv": "Veio de outra área"}, {"n": "Apple Store e Google Play", "v26": 640.82, "v27": 640.82, "sup": ["cd"], "note": "", "inf": false, "p": "Renovação das assinaturas dos aplicativos.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Apple Store e Google Play"]}, {"n": "Clipto", "v26": 0.0, "v27": 578.88, "sup": ["ir"], "note": "", "inf": false, "p": "Transcrição de pesquisas qualitativas.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Clipto"], "prev": "Substitui o Transkriptor, que em 2026 estava no Institucional (R$ 1,9 mil).", "mv": "Veio de outra área"}, {"n": "Flaticon", "v26": 0.0, "v27": 500.0, "sup": ["cd"], "note": "", "inf": false, "p": "Banco de animações para vídeos.", "ret": "", "nov": "novo", "nat": "OPEX", "src": ["Flaticon"]}, {"n": "Miro", "v26": 0.0, "v27": 462.0, "sup": ["pg"], "note": "", "inf": false, "p": "Colaboração e organização de projetos.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Miro"], "prev": "Em 2026 estava na Coordenação RJ (R$ 0,5 mil).", "mv": "Veio de outra área"}, {"n": "Canva (planejamento)", "v26": 0.0, "v27": 319.0, "sup": ["pg"], "note": "", "inf": false, "p": "Apresentações.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Canva (planejamento)"], "prev": "Em 2026 estava na Coordenação RJ (R$ 0,4 mil).", "mv": "Veio de outra área"}]}, {"id": "t-dti", "name": "Sustentação e serviços de TI", "code": "Renovação", "desc": "Equipe e contratos da TI da FGV que mantêm sistemas de apoio, licenças corporativas e webinars.", "items": [{"n": "Demandas gerais via DICOM", "v26": 53641.08, "v27": 63668.0, "sup": ["dti"], "note": "", "inf": false, "p": "Mão de obra própria.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Demandas gerais via DICOM"]}, {"n": "Licenças de IA (Claude) para arquitetura de soluções", "v26": 0.0, "v27": 39992.0, "sup": ["dti"], "note": "", "inf": false, "p": "Licenças de assistente de IA.", "ret": "", "nov": "novo", "nat": "OPEX", "src": ["Licenças de IA (Claude) para arquitetura de soluções"]}, {"n": "Gestão de TIC", "v26": 0.0, "v27": 29182.0, "sup": ["dti"], "note": "", "inf": false, "p": "Mão de obra própria.", "ret": "", "nov": "novo", "nat": "OPEX", "src": ["Gestão de TIC"]}, {"n": "Zoom para webinars", "v26": 16799.96, "v27": 18436.0, "sup": ["dti"], "note": "Em 2026: Zoom Webinar + Zoom Meeting.", "inf": false, "p": "Plataforma de webinars.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Zoom para webinars"]}, {"n": "Consultoria de desenvolvimento", "v26": 5714.63, "v27": 6115.0, "sup": ["dti"], "note": "", "inf": false, "p": "Consultor externo.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Consultoria de desenvolvimento"]}, {"n": "Suporte, governança e licenças do Centro de Tecnologias", "v26": 4182.03, "v27": 5372.0, "sup": ["dti"], "note": "Em 2026: suporte E-study+ e licenças D2L.", "inf": false, "p": "Suporte E-study+, políticas de governança e de IA, licenças D2L.", "ret": "", "nov": "renov", "nat": "OPEX", "src": ["Suporte, governança e licenças do Centro de Tecnologias"]}, {"n": "Desenvolvedor SharePoint (pessoal terceiro)", "v26": 576.36, "v27": 0.0, "sup": ["dti"], "note": "Linha de 2026 sem correspondente em 2027.", "inf": false, "p": "Desenvolvedor para o SharePoint.", "ret": "", "nov": "saiu", "nat": "OPEX", "src": []}]}, {"id": "t-adj", "name": "Diferença para o valor de referência de 2026", "code": "Só 2026", "desc": "O valor de 2026 adotado para Tecnologia é R$ 3.088 mil. O Consolidado TIC 2026 detalha R$ 2.662 mil; esta linha mostra a diferença, que não tem detalhamento por item.", "items": [{"n": "Diferença sem detalhamento por item", "v26": 426293.52, "v27": 0.0, "sup": ["nd"], "note": "Valor de 2026 sem item correspondente nas planilhas.", "inf": false, "p": "", "ret": "", "nov": "ajuste", "nat": "", "src": []}]}]}], "DUP": {"rj": 210437.16999999998, "sp": 24498, "inst": 39532.32}, "TIC26_DET": 2661706.48, "TIC26_REF": 3088000.0, "RJ_DUP": {"Streamyard": 3622.5, "SuperSaas": 2887.5, "Semrush": 85796.2, "Figma": 3110.4, "Lovable": 10967.04, "Elevenlabs": 1507.97, "Higgsfield": 2039.76, "Wondercraft": 1627.5, "Freepik": 2331, "Capcut": 800, "Flow-Veo3": 14518.8, "Canva PRO+": 1176, "Flaticon": 500, "Screaming Frog": 1517.76, "Claude (Marketing IDE)": 26400, "Copilot (Marketing IDE)": 8595.6, "Adspirer (Marketing IDE)": 6000, "Miro": 500, "Canva (planejamento)": 319, "Organimi": 912.74, "Visio": 2267.76, "ChatGPT": 2000, "Visio Plan 2": 6803.28, "Microsoft 365 Copilot": 1236.36, "Ferramenta de processos": 3000, "Claude (Processos)": 10000, "Claude (Governança de Dados)": 10000}, "SP_DUP": {"N8N": 4000, "DeepSeek API": 7200, "Qwen API": 7200, "KIMI": 900, "Cursor": 1953, "TacTiq": 797, "Traycer": 2448}, "INST_DUP": {"Gravação das ligações do atendimento": 37732.32, "Clipto": 600, "Envato": 1200}};
+/* 2026: valores antes citados em nota ("estava na Coordenação...") passam a ser o valor de 2026; itens viram renovação */
+(function(){const FIX={'Gemini API (Google)':6400,'Cloud Run (MailGuard)':7800,'Claude API (Anthropic)':19200,'OpenAI API':18000,'n8n':3950,'Cursor':1400,'Semrush (ampliado)':52800,'Flow Veo 3 (Google)':12000,'StreamYard':4100,'Figma':3600,'Ferramenta para a área de Processos':2500,'SuperSaaS':2900,'Freepik':2200,'Visio':2300,'Higgsfield':1900,'Screaming Frog':1500,'ElevenLabs':1400,'Organimi':800,'Clipto':1900,'Miro':500,'Canva (planejamento)':400,'Envato Elements':1300};
+const t=D.BLOCKS.find(b=>b.id==='tic');
+t.groups.forEach(g=>g.items.forEach(x=>{if(FIX[x.n]!==undefined){x.v26=FIX[x.n];x.nov='renov';delete x.mv;if(x.n==='Clipto')x.prev='Substitui o Transkriptor.';else delete x.prev;}}));
+/* a linha de diferença fecha o valor de referência de 2026 (R$ 3.088 mil) */
+t.groups.find(g=>g.id==='t-ia').code='Novo e renovação';
+t.groups.forEach(g=>g.items.forEach(x=>{
+ if(x.n==='Aplicativo FGV (Smart Retail), pessoal terceiro'||x.n==='Vendas recorrentes por cartão: implementação')x.p='';
+ if(x.n==='Site Sharepoint (portal e chamados)')x.note='';
+ if(x.n==='Google Cloud (Inteligência de Mercado, Digital e IA)')delete x.prev;}));
+const adj=t.groups.find(g=>g.id==='t-adj').items[0];
+adj.v26=D.TIC26_REF-t.groups.filter(g=>g.id!=='t-adj').reduce((s,g)=>s+g.items.reduce((a,x)=>a+x.v26,0),0);})();
+(function(){
+'use strict';
+const $=(s,c)=>(c||document).querySelector(s),$$=(s,c)=>Array.from((c||document).querySelectorAll(s));
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nf=(n,d)=>n.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
+/* valores em linguagem simples: R$ 11,00 mi · R$ 245,6 mil · R$ 840 */
+function brl(v){const a=Math.abs(v);if(a<0.5)return 'R$ 0';if(a>=1e6)return 'R$ '+nf(a/1e6,2)+' mi';if(a>=1e3)return 'R$ '+nf(a/1e3,1)+' mil';return 'R$ '+nf(a,0);}
+function sbrl(v){if(Math.abs(v)<0.5)return 'R$ 0';return (v>0?'+':'−')+brl(v);}
+const exact=v=>'R$ '+nf(v,2);
+function pct(a,b){if(a===0&&b===0)return '—';if(a===0)return 'novo';if(b===0)return '−100%';const p=(b-a)/a*100;return (p>0?'+':'−')+nf(Math.abs(p),Math.abs(p)<10?1:0)+'%';}
+
+const SUP=D.SUPS;
+const SUPC={me:'#0B4A6B',mi:'#4F8FB8',pg:'#7FBCDD',cd:'#008BC9',ir:'#00597F',ia:'#2FB3C7',gd:'#5E7F96',dir:'#A3B3BE',cmp:'#C9D4DB',dti:'#8EA0AC',nd:'#E3E8EB'};
+const SUPS_SHORT={me:'Marketing Escolas e Unidades',mi:'Marketing IDE',pg:'Planejamento e Gestão',cd:'Comunicação e Digital',ir:'Inteligência e Relacionamento',ia:'TDDI · Inovação e IA',gd:'TDDI · Governança de Dados',dir:'Diretoria',cmp:'Compartilhado',dti:'TI corporativa (DTI)',nd:'Ajuste 2026'};
+const supChip=(k,inf)=>`<span class="sup" style="--c:${SUPC[k]}" title="${esc(SUP[k])}${inf?' · classificação inferida, a confirmar':''}"><i></i>${esc(SUPS_SHORT[k])}${inf?'<em class="inf" aria-label="inferida">≈</em>':''}</span>`;
+
+/* ---------- status de cada item ---------- */
+function status(x){
+  const a=x.v26,b=x.v27;
+  if(a===0&&b===0)return['zero','Sem valor'];
+  if(x.mv)return['mudou',a>0?'Mudou de lugar':'Veio de outra área'];
+  if(a===0)return['novo','Novo'];
+  if(b===0)return['saiu','Saiu'];
+  if(Math.abs(b-a)<1)return['igual','Igual'];
+  return b>a?['aum','Aumentou']:['red','Reduziu'];
+}
+const stPill=x=>{const s=status(x);return `<span class="st ${s[0]}">${s[1]}</span>`;};
+
+/* ---------- blocos ---------- */
+const BL={};D.BLOCKS.forEach(b=>{BL[b.id]=b;b.t26=0;b.t27=0;b.groups.forEach(g=>{g.items.forEach(x=>{x.blk=b.id;b.t26+=x.v26;b.t27+=x.v27;});});});
+D.BLOCKS.forEach(b=>b.groups.forEach(g=>g.items.forEach(x=>{if(!x.nov&&x.v27>0)x.nov=(x.mv||x.v26>0)?'renov':'novo';})));
+const ORDER=['inst','rj','sp','tic'];
+const T26=ORDER.reduce((s,k)=>s+BL[k].t26,0),T27=ORDER.reduce((s,k)=>s+BL[k].t27,0);
+const DUPT=D.DUP.rj+D.DUP.sp+D.DUP.inst;
+const ALL=[];ORDER.forEach(k=>BL[k].groups.forEach(g=>g.items.forEach(x=>{x.grp=g.name;ALL.push(x);})));
+
+/* tabela expansível com filtro de Superintendência */
+function tableHTML(bid,flt){
+  const b=BL[bid];let t26=0,t27=0,rows='';
+  const gs=b.groups.map(g=>{const all=g.items.filter(x=>!flt||x.sup.includes(flt));return{g,all,its:all.filter(x=>x.v27>0),a:all.reduce((s,x)=>s+x.v26,0),c:all.reduce((s,x)=>s+x.v27,0)};}).filter(o=>o.all.length);
+  gs.sort((p,q)=>(q.g.id==='t-adj')-(p.g.id==='t-adj')||Math.max(q.a,q.c)-Math.max(p.a,p.c));
+  gs.forEach(o=>{
+    t26+=o.a;t27+=o.c;if(!o.its.length)return;const d=o.c-o.a;
+    const its=o.its.slice().sort((p,q)=>Math.max(q.v26,q.v27)-Math.max(p.v26,p.v27));
+    rows+=`<details class="grp"><summary class="gs"><span class="gn"><b>${esc(o.g.name)}</b><span>${esc(o.g.desc)} <code>${esc(o.g.code)}</code></span></span>
+<span class="num" data-l="2026" title="${exact(o.a)}">${brl(o.a)}</span><span class="num" data-l="2027" title="${exact(o.c)}">${brl(o.c)}</span><span class="num dv ${d>0?'up':d<0?'dn':''}" data-l="Variação">${sbrl(d)}</span><span class="pct">${pct(o.a,o.c)}</span></summary>
+<div class="items">${its.map(x=>itemRow(x)).join('')}</div></details>`;
+  });
+  const d=t27-t26;
+  return `<div class="tbl"><div class="th"><span>Grupo de despesa · clique para abrir os itens</span><span>2026</span><span>2027</span><span>Variação</span><span>%</span></div>${rows}
+<div class="tf"><span>Total${flt?' · '+esc(SUPS_SHORT[flt]):''}</span><span class="num" data-l="2026">${brl(t26)}</span><span class="num" data-l="2027">${brl(t27)}</span><span class="num" data-l="Variação">${sbrl(d)}</span><span class="pct">${pct(t26,t27)}</span></div></div>`;
+}
+function itemRow(x){
+  const d=x.v27-x.v26,s=status(x);
+  let extra='';
+  if(x.n26&&x.v26>0)extra+=`<p>Em 2026: ${esc(x.n26)}.</p>`;
+  if(x.p)extra+=`<p>${esc(x.p)}</p>`;
+  if(x.ret)extra+=`<p class="ret">${esc(x.ret)}</p>`;
+  if(x.note)extra+=`<p>${esc(x.note)}</p>`;
+  if(x.prev)extra+=`<p class="mv">${esc(x.prev)}</p>`;
+  if(x.mv&&!x.prev)extra+=`<p class="mv">${esc(x.mv)}.</p>`;
+  if(x.trips26){const li=a=>a.length?'<ul>'+a.map(t=>`<li>${esc(t[0])}: ${brl(t[1])}</li>`).join('')+'</ul>':'<ul><li>Nenhuma viagem</li></ul>';extra+=`<div class="trips"><div><b>2026</b>${li(x.trips26)}</div><div><b>2027</b>${li(x.trips27)}</div></div>`;}
+  const nov=x.nov==='novo'||x.nov==='misto'?'<span class="st novot">Novo em 2027</span>':x.nov==='renov'?'<span class="st renov">Renovação</span>':'';
+  return `<div class="ir ${s[0]}"><div class="inm"><b>${esc(x.n)}</b><div class="meta">${stPill(x)}${nov}${x.sup.map(k=>supChip(k,x.inf)).join('')}</div>${extra}</div>
+<span class="num" data-l="2026" title="${exact(x.v26)}">${brl(x.v26)}</span><span class="num" data-l="2027" title="${exact(x.v27)}">${brl(x.v27)}</span><span class="num dv ${d>0?'up':d<0?'dn':''}" data-l="Variação">${sbrl(d)}</span><span class="pct stc">${pct(x.v26,x.v27)}</span></div>`;
+}
+function supsOf(bid){const s=new Set();BL[bid].groups.forEach(g=>g.items.forEach(x=>x.sup.forEach(k=>s.add(k))));return Object.keys(SUP).filter(k=>s.has(k));}
+function blockTools(bid){return `<div class="tools"><div class="chips"></div><button class="btn" type="button" data-exp>Abrir todos</button></div><div data-tbl="${bid}">${tableHTML(bid,'')}</div>`;}
+function wireBlock(el){
+  el.addEventListener('click',e=>{
+    const c=e.target.closest('[data-flt] .chip');
+    if(c){const box=c.parentElement,bid=box.dataset.flt;$$('.chip',box).forEach(x=>x.setAttribute('aria-pressed',x===c));$(`[data-tbl="${bid}"]`,el).innerHTML=tableHTML(bid,c.dataset.v);const xb=$('[data-exp]',el);if(xb)xb.textContent='Abrir todos';return;}
+    const xb=e.target.closest('[data-exp]');
+    if(xb){const ds=$$('details.grp',el),open=ds.some(d=>!d.open);ds.forEach(d=>d.open=open);xb.textContent=open?'Fechar todos':'Abrir todos';}
+  });
+}
+const kick=(n,t)=>`<div class="kick rv"><i></i><span>Capítulo ${String(n).padStart(2,'0')}</span><em>${esc(t)}</em></div>`;
+function kpis(b){const d=b.t27-b.t26;return `<div class="kpis"><div class="kpi"><span>2026</span><b>${brl(b.t26)}</b><small>orçado</small></div><div class="kpi"><span>2027</span><b class="ac">${brl(b.t27)}</b><small>orçado</small></div><div class="kpi"><span>Diferença</span><b>${sbrl(d)}</b><small>${pct(b.t26,b.t27)} em relação a 2026</small></div></div>`;}
+
+/* ---------- slides ---------- */
+const SL=[];
+SL.push({t:'Abertura',html:()=>`<div class="in cov">
+<div><div class="cov-k rv">Orçamento DICOM · Comparativo</div>
+<h1 class="cov-h rv">O que muda<br>de <b>2026</b> para <b>2027</b></h1>
+<p class="cov-s rv">Diretoria de Comunicação e Marketing.</p></div>
+<div class="cov-foot rv"><div><small>Elaborado por</small><b>Diretoria de Comunicação e Marketing</b></div><div><small>Valores</small><b>Orçado 2026 x Orçado 2027</b></div><button class="cov-go" type="button" data-go="1">Começar →</button></div>
+<div class="cov-ghost" aria-hidden="true">2027</div></div>`});
+
+/* visão geral: dados da Apresentação de Planejamento (pptx), com TIC 2026 = R$ 3.088 mil */
+const PPT={
+ dicom:{name:'DICOM · Internalizar parte da Agência',short:'DICOM',
+  tot:[24108,27365,26305,33438],
+  rows:[['Pessoal e encargos (não foi incluída nenhuma contratação, reajuste de dissídio e demais encargos)',[21618,23737,24004,25260]],
+        ['Internalização de parte da Agência (pessoal, encargos e equipamentos) - REVER ESSE VALOR COM A NOVA ESTRUTURA',[0,0,0,2300],1,null,'b'],
+        ['Viagens',[87,250,145,309],1,[59,163]],
+        ['Transferência interna: taxa de cancelamento de eventos',[-147,0,-167,-200]],
+        ['Outras despesas: DCC, arquitetura de dados, ferramentas de IA, Salesforce, manutenção de infraestrutura e renovações contratuais',[2551,3378,2323,5769],1,[2392,3447]]],
+  prem:[['Investimento em TIC','R$ 3.088 mil → R$ 5.005 mil <b>+62,1%</b>',''],
+        ['Inovação e Tecnologia (Outras despesas)','Novas ferramentas e softwares de IA e arquitetura de dados para os projetos estratégicos.',''],
+        ['DICOM Next','Nova equipe de performance: R$ 2,3 mi com folha, licenças e equipamentos.',''],
+        ['Viagens','Eventos nacionais e internacionais das novas áreas de Arquitetura de Dados e de IA e Inovação.','']],
+  foot:''},
+ semint:{name:'DICOM · sem internalizar parte da agência',short:'DICOM sem internalização',
+  tot:[24108,27365,26305,31138],
+  rows:[['Pessoal e encargos (não foi incluída nenhuma contratação, reajuste de dissídio e demais encargos)',[21618,23737,24004,25260]],
+        ['Viagens',[87,250,145,309],1,[59,163]],
+        ['Transferência interna: taxa de cancelamento de eventos',[-147,0,-167,-200]],
+        ['Outras despesas: DCC, arquitetura de dados, ferramentas de IA, Salesforce, manutenção de infraestrutura e renovações contratuais',[2551,3378,2323,5769],1,[2392,3447]]],
+  prem:[['Investimento em TIC','R$ 3.088 mil → R$ 5.005 mil <b>+62,1%</b>',''],
+        ['Inovação e Tecnologia (Outras despesas)','Novas ferramentas e softwares de IA e arquitetura de dados para os projetos estratégicos.',''],
+        ['Sem a internalização da agência','Cenário que retira os R$ 2,3 mi da equipe de performance (folha, licenças e equipamentos).',''],
+        ['Viagens','Eventos nacionais e internacionais das novas áreas de Arquitetura de Dados e de IA e Inovação.','']],
+  foot:''},
+ inst:{name:'Publicidade Institucional',short:'Publicidade Institucional',
+  tot:[19256,21359,20982,22668],
+  rows:[['Marketing (publicidade e propaganda)',[14967,16726,16526,18140],1],
+        ['Mestrado Unificado',[5540,6200,6200,6820],2],
+        ['Vestibular',[9153,10000,10000,11000],2],
+        ['Outras despesas de divulgação: Mídia Always On, podcasts Impacto Social e Impacto em Movimento, Radar FGV',[274,526,326,320],2],
+        ['Outras despesas: renovações contratuais, softwares, novos projetos etc.',[4289,4633,4457,4528],1]],
+  prem:[['Variação orçamentária','Aumento de <b>+6,1%</b> em 2027.',''],
+        ['Campanhas de marketing','<b>+10%</b> no Mestrado Unificado e no Vestibular.',''],
+        ['Novas iniciativas','Ação Embaixadores, Google Meu Negócio e Wikipedia.','']],
+  foot:''}
+};
+const fk=v=>(v<0?'−':'')+nf(Math.abs(v),0);
+const fd=v=>Math.abs(v)<0.5?'0':(v>0?'+':'−')+nf(Math.abs(v),0);
+const fp=(a,b)=>a===0?(b===0?'—':'novo'):((b-a)/a*100>0?'+':'−')+nf(Math.abs((b-a)/a*100),1)+'%';
+function pptChart(t){
+ const W=520,H=250,y0=200,mx=Math.max(...t),sc=v=>v/mx*150,bw=96,xs=[50,212,374],ys=[t[0],t[1],t[3]],lb=['2025 executado','2026 orçado','2027 orçado'];
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Total da despesa: 2025 ${fk(t[0])}, 2026 ${fk(t[1])}, 2027 ${fk(t[3])} (R$ mil)">`;
+ ys.forEach((v,i)=>{const h=sc(v);s+=`<rect x="${xs[i]}" y="${y0-h}" width="${bw}" height="${h}" fill="${i===2?'var(--acc)':'var(--soft)'}" stroke="${i===2?'none':'var(--line)'}"/><text x="${xs[i]+bw/2}" y="${y0-h-10}" text-anchor="middle" font-size="16" font-weight="700" fill="var(--ink)">${fk(v)}</text><text x="${xs[i]+bw/2}" y="${y0+22}" text-anchor="middle" font-size="13" fill="var(--mut)">${lb[i]}</text>`;});
+ [[0,1],[1,2]].forEach(([a,b])=>{const xa=xs[a]+bw-6,xb=xs[b]+6,ya=y0-sc(ys[a])-34,yb=y0-sc(ys[b])-34,mxp=(xa+xb)/2,myp=(ya+yb)/2;
+  s+=`<line x1="${xa}" y1="${ya}" x2="${xb}" y2="${yb}" stroke="var(--acc-l)" stroke-width="1.6" stroke-dasharray="3 4"/><rect x="${mxp-34}" y="${myp-12}" width="68" height="22" rx="11" fill="var(--card)" stroke="var(--acc-l)"/><text x="${mxp}" y="${myp+4}" text-anchor="middle" font-size="12" font-weight="600" fill="var(--acc-2)">${fp(ys[a],ys[b])}</text>`;});
+ s+=`<line x1="30" x2="${W-30}" y1="${y0}" y2="${y0}" stroke="var(--ink)" stroke-width="1.2"/></svg>`;return s;
+}
+function pptPanel(k){
+ const P=PPT[k],t=P.tot;
+ const row=(lab,v,lv,cls,dd,hl)=>{const dO=v[3]-v[1];return `<div class="pr ${cls||''} lv${lv||1}"><span>${hl?'<b>'+esc(lab)+'</b>':esc(lab)}</span><span class="num" data-l="2026 orç.">${fk(v[1])}</span><span class="num b" data-l="2027 orç.">${(!cls&&(v[3]===5769||v[3]===2300))?'<mark class="mk">'+fk(v[3])+'</mark>':fk(v[3])}</span><span class="num dv ${v[3]-v[1]>0?'up':v[3]-v[1]<0?'dn':''}" data-l="27 x Orç. 26">${fd(dO)}<small>${fp(v[1],v[3])}</small></span></div>`;};
+ return `<div class="ptw"><div class="pt"><div class="ph"><span>Valores em R$ mil</span><span>2026<br>orçado</span><span>2027<br>orçado</span><span>2027 x<br>orçado 2026</span></div>
+${row('Total da despesa',t,1,'ptot')}${P.rows.map(r=>row(r[0],r[1],r[2],'',r[3],r[4])).join('')}</div></div>
+${P.foot?`<p class="note">${esc(P.foot)}</p>`:''}`;
+}
+SL.push({t:'Visão geral',html:()=>{const a=PPT.dicom.tot,b=PPT.inst.tot;
+ return `<div class="in fit"><div class="hd">${kick(1,'Visão geral')}<h2 class="rv">O orçamento de 2027 em <b>duas visões</b></h2></div>
+<p class="lead rv">Orçamento da <b>Diretoria</b> (equipe, viagens, tecnologia e contratos) em duas visões: com e <b>sem parte da internalização da agência</b>. Valores referentes ao planejamento orçamentário de 2027.</p>
+<div class="ovh rv">${['dicom','semint'].map(k=>{const t=PPT[k].tot;return `<button type="button" class="ovc" data-ppt="${k}" aria-pressed="${k==='dicom'}"><span class="lbl">${esc(PPT[k].name)}</span><span class="ovn"><span><small>2026 orçado</small>${fk(t[1])}</span><i aria-hidden="true">→</i><span><small>2027 orçado</small><b>${fk(t[3])}</b></span></span><span class="ovd">${fd(t[3]-t[1])} · <b>${fp(t[1],t[3])}</b> <em>R$ mil</em></span></button>`;}).join('')}</div>
+<div class="rv" id="pptP">${pptPanel('dicom')}</div>
+</div>`;},
+ init(el){el.addEventListener('click',e=>{const c=e.target.closest('[data-ppt]');if(!c)return;$$('[data-ppt]',el).forEach(x=>x.setAttribute('aria-pressed',x===c));$('#pptP',el).innerHTML=pptPanel(c.dataset.ppt);});}});
+
+SL.push({t:'Como ler',html:()=>`<div class="in"><div class="hd">${kick(2,'Como ler')}<h2 class="rv">Quatro orçamentos, <b>uma regra de leitura</b></h2></div>
+<div class="steps3 rv">
+<div class="card st3"><span class="num">1</span><b>Veja o total do capítulo</b><span>Cada capítulo abre com quanto foi orçado em 2026, em 2027 e a diferença.</span></div>
+<div class="card st3"><span class="num">2</span><b>Abra um grupo de despesa</b><span>Clique em uma linha da tabela (sinal +) para ver os itens que a compõem, com o valor de cada ano.</span></div>
+<div class="card st3"><span class="num">3</span><b>Filtre por Superintendência</b><span>Os botões acima da tabela mostram só os itens de uma Superintendência e refazem as somas.</span></div></div>
+<div class="legend rv">
+<div class="lg"><span class="st novo">Novo</span><p>Item que não existia em 2026.</p></div>
+<div class="lg"><span class="st saiu">Saiu</span><p>Item de 2026 que não entra em 2027.</p></div>
+<div class="lg"><span class="st aum">Aumentou</span><p>Existe nos dois anos e custa mais em 2027.</p></div>
+<div class="lg"><span class="st red">Reduziu</span><p>Existe nos dois anos e custa menos em 2027.</p></div>
+<div class="lg"><span class="st igual">Igual</span><p>Mesmo valor nos dois anos.</p></div>
+<div class="lg"><span class="st mudou">Mudou de lugar</span><p>Continua existindo, mas passou a ser orçado em outra área.</p></div></div>
+<div class="out rv"><b>Fora deste comparativo:</b> pessoal e encargos, DICOM Next (nova equipe de performance), Contact Center SP e a transferência interna da taxa de cancelamento de eventos. Esses valores estão no orçamento geral da DICOM, mas não nas abas comparadas aqui.</div></div>`});
+
+/* superintendências */
+function supAgg(f){
+  const m={};
+  ALL.forEach(x=>{if(f&&x.blk!==f)return;const k=x.sup[0];m[k]=m[k]||{a:0,b:0,n:0};m[k].a+=x.v26;m[k].b+=x.v27-(!f&&x.dup27?x.dup27:0);m[k].n++;});
+  return Object.keys(m).map(k=>Object.assign({k},m[k])).sort((p,q)=>q.b-p.b||q.a-p.a);
+}
+function supHTML(f){
+  const rows=supAgg(f),mx=Math.max(...rows.map(r=>Math.max(r.a,r.b)),1);
+  return rows.map(r=>{const d=r.b-r.a;return `<button class="srow" type="button" data-sup="${r.k}" data-f="${f}"><span class="sn" style="--c:${SUPC[r.k]}"><i></i>${esc(SUP[r.k])}</span><span class="bars"><span class="bar a"><u style="width:${(r.a/mx*82).toFixed(2)}%"></u>${brl(r.a)}</span><span class="bar b"><u style="width:${(r.b/mx*82).toFixed(2)}%"></u>${brl(r.b)}</span></span><span class="dv ${d>0?'up':d<0?'dn':''}">${sbrl(d)}</span></button>`;}).join('');
+}
+SL.push({t:'Superintendências',html:()=>`<div class="in"><div class="hd">${kick(3,'Por Superintendência')}<h2 class="rv">Quem é responsável por <b>cada parte</b> do orçamento</h2></div>
+<p class="lead rv">Cada item foi atribuído à Superintendência que o pediu ou que o administra. Itens com mais de uma Superintendência contam para a primeira listada. Clique em uma linha para ver os itens.</p>
+<div class="tools rv"><div class="chips" id="supF"><span class="lbl">Orçamento</span><button class="chip" type="button" data-v="" aria-pressed="true">Todos</button>${ORDER.map(k=>`<button class="chip" type="button" data-v="${k}" aria-pressed="false">${esc(BL[k].short)}</button>`).join('')}</div>
+<div class="sleg"><span><i style="background:var(--acc-l);opacity:.55"></i>2026</span><span><i style="background:var(--acc)"></i>2027</span></div></div>
+<div class="card rv" style="padding:.4rem 1rem"><div class="sb" id="supB">${supHTML('')}</div></div>
+<p class="note rv" id="supN">Em “Todos”, as ferramentas que aparecem nas reservas e também em Tecnologia (${brl(DUPT)}) contam uma vez só, em Tecnologia.</p></div>`,
+ init(el){
+  el.addEventListener('click',e=>{
+   const c=e.target.closest('#supF .chip');
+   if(c){$$('#supF .chip',el).forEach(x=>x.setAttribute('aria-pressed',x===c));$('#supB',el).innerHTML=supHTML(c.dataset.v);$('#supN',el).hidden=!!c.dataset.v;return;}
+   const r=e.target.closest('.srow');if(!r)return;
+   const k=r.dataset.sup,f=r.dataset.f;
+   const its=ALL.filter(x=>x.sup[0]===k&&(!f||x.blk===f));
+   let h=`<p class="note">${esc(SUP[k])}${f?' · '+esc(BL[f].short):''}. Valores de 2026 e 2027 de cada item.</p>`;
+   ORDER.forEach(b=>{const l=its.filter(x=>x.blk===b);if(!l.length)return;h+=`<h4>${esc(BL[b].name)}</h4><div class="items" style="padding:0">${l.sort((p,q)=>Math.max(q.v26,q.v27)-Math.max(p.v26,p.v27)).map(itemRow).join('')}</div>`;});
+   openModal(SUP[k],h);
+  });
+ }});
+
+const HL={
+ inst:['Vestibular e Mestrado Unificado crescem 10% cada: <b>+R$ 1,62 mi</b> somados. O Mestrado volta ao valor cheio de R$ 6,82 mi.',
+       'Entram Google Meu Negócio e Wikipedia (<b>R$ 231 mil</b>), a Village para marcas e patentes (<b>R$ 200 mil</b>), Premiações e Ação Embaixadores.',
+       'Saem itens de 2026 que não se repetem: Supermetrics (já paga até 2028), Ranking IGC, redesign da marca, Lead Scoring e Fórum Imprensa (<b>−R$ 756 mil</b>).',
+       'A reserva para pesquisas cai <b>R$ 250 mil</b>.'],
+ rj:['Software cai <b>R$ 79 mil</b>: o Frisbie reduz R$ 154 mil e saem BigQuery, avaliação de desempenho e newsletter. As ferramentas que continuam passam a ser uma <b>Reserva para softwares</b>, detalhada em Tecnologia.',
+     'Estagiários passam de 8 para 11: <b>+R$ 54 mil</b>.',
+     'Entram viagens e eventos internacionais de dados e IA (Google, IBM, Gartner): <b>+R$ 73 mil</b>. Entra também a associação ABA (<b>R$ 75 mil</b>).',
+     'Sai o Podcast CMO (<b>−R$ 66 mil</b>) e as compras pontuais de 2026 (drone, totens de PVC, prismas).'],
+ sp:['Equipamentos crescem <b>R$ 86,5 mil</b>: notebooks (+R$ 45 mil) e totens e impressoras para eventos.',
+     'Entram eventos e treinamentos da equipe de Inovação e IA (<b>R$ 50 mil</b>) e a ambientação do escritório (<b>R$ 20 mil</b>).',
+     'A reserva para softwares de SP reúne as ferramentas de IA da equipe: <b>R$ 60 mil</b>, detalhada em Tecnologia.',
+     'Viagens sobem <b>R$ 25 mil</b>, com as idas da equipe de Marketing Escolas ao Rio. Estagiários caem de 4 para 2.']
+};
+[['inst',3,'Publicidade Institucional','A maior parte vai para as campanhas do <b>Vestibular e do Mestrado</b>'],['rj',5,'Coordenação RJ','No Rio, o total quase não muda, mas <b>os itens mudam bastante</b>'],['sp',6,'Coordenação SP','Em São Paulo, o orçamento <b>mais que dobra</b>']].forEach(([bid,n,t,h])=>{
+  SL.push({t,bid,html:()=>{const b=BL[bid];return `<div class="in"><div class="hd">${kick(n,t)}<h2 class="rv">${h}</h2></div>
+<div class="rv">${blockTools(bid)}</div></div>`;},init:wireBlock});
+});
+
+/* tecnologia */
+function ticChart(){
+  const b=BL.tic,nvs=ALL.filter(x=>x.blk==='tic'&&x.nov==='novo'),novIA=nvs.filter(x=>gid(x)==='t-ia').reduce((s,x)=>s+x.v27,0),novGD=nvs.filter(x=>gid(x)==='t-gd').reduce((s,x)=>s+x.v27,0);
+  const novOut=nvs.filter(x=>!['t-ia','t-gd'].includes(gid(x))).reduce((s,x)=>s+x.v27,0);
+  const ren=b.t27-novIA-novGD-novOut;
+  const H=230,mx=b.t27,sc=v=>v/mx*H,y0=262,bw=150,x1=60,x2=290;
+  const h26=sc(b.t26),hr=sc(ren),hn=sc(novIA+novGD+novOut);
+  return {ren,novIA,novGD,novOut,svg:`<svg viewBox="0 0 520 310" role="img" aria-label="Tecnologia: 2026 ${brl(b.t26)}; 2027 ${brl(ren)} de renovações mais ${brl(novIA+novGD+novOut)} de itens novos">
+<line x1="${x1}" x2="${x2+bw}" y1="${y0-h26}" y2="${y0-h26}" stroke="var(--mut)" stroke-dasharray="4 5" stroke-width="1.2"/>
+<rect x="${x1}" y="${y0-h26}" width="${bw}" height="${h26}" fill="var(--acc-l)" opacity=".55"/>
+<text x="${x1+bw/2}" y="${y0-h26/2+6}" text-anchor="middle" font-size="17" font-weight="600" fill="var(--ink)">${brl(b.t26)}</text>
+<rect x="${x2}" y="${y0-hr}" width="${bw}" height="${hr}" fill="var(--deep)"/>
+<text x="${x2+bw/2}" y="${y0-hr/2}" text-anchor="middle" font-size="16" font-weight="600" fill="#fff">${brl(ren)}</text>
+<text x="${x2+bw/2}" y="${y0-hr/2+19}" text-anchor="middle" font-size="12" fill="#cfe3ee">renovações</text>
+<rect x="${x2}" y="${y0-hr-hn}" width="${bw}" height="${hn}" fill="var(--acc)"/>
+<text x="${x2+bw/2}" y="${y0-hr-hn/2}" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">+ ${brl(novIA+novGD+novOut)}</text>
+<text x="${x2+bw/2}" y="${y0-hr-hn/2+18}" text-anchor="middle" font-size="12" fill="#fff">itens novos</text>
+<text x="${x2+bw+10}" y="${y0-hr-hn+6}" font-size="13" font-weight="700" fill="var(--ink)">${brl(b.t27)}</text>
+<line x1="${x1-12}" x2="${x2+bw+12}" y1="${y0}" y2="${y0}" stroke="var(--ink)" stroke-width="1.5"/>
+<text x="${x1+bw/2}" y="${y0+24}" text-anchor="middle" font-size="14" font-weight="600" fill="var(--ink)">2026</text>
+<text x="${x2+bw/2}" y="${y0+24}" text-anchor="middle" font-size="14" font-weight="600" fill="var(--ink)">2027</text>
+<text x="${x1+bw/2}" y="${y0+41}" text-anchor="middle" font-size="11" fill="var(--mut)">valor de referência</text></svg>`};
+}
+function gid(x){for(const g of BL.tic.groups)if(g.items.includes(x))return g.id;return '';}
+SL.push({t:'Tecnologia',bid:'tic',html:()=>{const b=BL.tic;return `<div class="in"><div class="hd">${kick(2,'Tecnologia e dados (Diretoria de Comunicação e Marketing)')}<h2 class="rv">Tecnologia cresce <b>${pct(b.t26,b.t27)}</b> no orçamento da Diretoria</h2></div>
+<div class="rv">${blockTools('tic')}</div></div>`;},init:wireBlock});
+
+/* entrou e saiu */
+const MVT=[['novo','O que entra',x=>x.v26===0&&x.v27>0&&!x.mv&&x.kind!=='reserva',x=>x.v27],['aum','Maiores aumentos',x=>x.v26>0&&x.v27>x.v26+1&&x.kind!=='reserva',x=>x.v27-x.v26],['red','Maiores reduções',x=>x.v27>0&&x.v26>x.v27+1,x=>x.v26-x.v27]];
+function mvHTML(k){const m=MVT.find(z=>z[0]===k),l=ALL.filter(m[2]).sort((p,q)=>m[3](q)-m[3](p)),top=l.slice(0,10),tot=l.reduce((s,x)=>s+m[3](x),0);
+ return `<p class="note">${l.length} itens somam ${brl(tot)}${l.length>10?'. Abaixo, os 10 maiores':''}.</p><div class="mvl">${top.map((x,i)=>{const v=m[3](x);return `<div class="mvr"><span class="rk">${i+1}</span><div><b>${esc(x.n)}</b><p>${esc(BL[x.blk].short)} · ${esc(x.grp)} · ${esc(SUPS_SHORT[x.sup[0]])}${x.inf?' ≈':''}</p></div>${stPill(x)}<span class="num">${k==='saiu'||k==='red'?'−':'+'}${brl(v)}</span></div>`;}).join('')}</div>`;}
+SL.push({t:'Entradas e saídas',html:()=>`<div class="in"><div class="hd">${kick(4,'Entradas e saídas')}<h2 class="rv">O que <b>entra</b>, o que <b>sai</b> e o que muda de tamanho</h2></div>
+<p class="lead rv">Os itens de todos os orçamentos, juntos. Itens sem valor em 2027 não são listados. As reservas para softwares não entram na lista de novos.</p>
+<div class="chips rv" id="mvF">${MVT.map((m,i)=>`<button class="chip" type="button" data-v="${m[0]}" aria-pressed="${i===0}">${m[1]}</button>`).join('')}</div>
+<div class="card rv" style="padding:.8rem 1.1rem" id="mvB">${mvHTML('novo')}</div></div>`,
+ init(el){el.addEventListener('click',e=>{const c=e.target.closest('#mvF .chip');if(!c)return;$$('#mvF .chip',el).forEach(x=>x.setAttribute('aria-pressed',x===c));$('#mvB',el).innerHTML=mvHTML(c.dataset.v);});}});
+
+/* notas */
+SL.push({t:'Notas e fontes',html:()=>{return `<div class="in"><div class="hd">${kick(9,'Notas e fontes')}<h2 class="rv">Como os números <b>foram montados</b></h2></div>
+<div class="notes rv">
+<section class="card nb"><h3>Fontes</h3><ul>
+<li><b>Institucional, Coordenação RJ e SP:</b> abas “Institucional” e “RJ e SP” do v1 2026 e do v1 2027 (coluna de total anual). Viagens detalhadas pela aba “Rateio Diárias”.</li>
+<li><b>Tecnologia 2027:</b> Slide 7 de Tecnologia, versão completa (R$ 5.005 mil). Descrições e ganhos esperados de IA e governança de dados: versão revisada por Inovação e IA e Governança de Dados.</li>
+<li><b>Tecnologia 2026:</b> valor de referência de R$ 3.088 mil. O Consolidado TIC v2 2026 detalha R$ 2.662 mil; a diferença (${brl(D.TIC26_REF-D.TIC26_DET)}) aparece em uma linha própria.</li>
+<li><b>Superintendências:</b> planilha de aprovados e reprovados do Facó, Planilhão de Contratos e Ferramentas e aba “Ferramentas Cartão” do v1 2027.</li></ul></section>
+<section class="card nb"><h3>Regras adotadas</h3><ul>
+<li><b>Mestrado Unificado:</b> R$ 6,82 mi em 2027. Os R$ 321,5 mil previstos para o Contact Center (Resposta audível) voltaram para a campanha; essa conta fica zerada. O total do Institucional não muda.</li>
+<li><b>Ferramentas em dois lugares:</b> ${brl(DUPT)} em ferramentas foram orçados na Coordenação RJ (${brl(D.DUP.rj)}), na Coordenação SP (${brl(D.DUP.sp)}) e no Institucional (${brl(D.DUP.inst)}) e também na Tecnologia. Nessas abas, elas aparecem como “Reserva para softwares”; os nomes aparecem só em Tecnologia.</li>
+<li><b>Comparação das reservas:</b> o valor de 2026 de cada reserva é a soma das ferramentas equivalentes, que em 2026 eram listadas uma a uma.</li>
+<li><b>Mesmo item:</b> descrições que só mudaram o ano ou a edição (por exemplo, “8º Seminário” e “9º Seminário”) foram tratadas como o mesmo item. Linhas sem valor nos dois anos foram omitidas.</li></ul></section>
+
+</div></div>`;}});
+
+/* recorte: slides 1, 2, 8 e 9 */
+{const keep=[0,1,7];const k=keep.map(i=>SL[i]);SL.length=0;k.forEach(x=>SL.push(x));}
+/* ---------- montagem ---------- */
+const stage=$('#stage');
+SL.forEach((s,i)=>{const e=document.createElement('section');e.className='slide'+(s.dark?' dark':'');e.dataset.s='after';e.setAttribute('aria-label',(i+1)+'. '+s.t);e.innerHTML=s.html();$$('.rv',e).forEach((r,k)=>r.style.setProperty('--i',k));stage.appendChild(e);s.el=e;if(s.init)s.init(e);});
+$('#dots').innerHTML=SL.map((s,i)=>`<button type="button" data-i="${i}" aria-label="${i+1}. ${esc(s.t)}" title="${esc(s.t)}"></button>`).join('');
+
+const modal=document.createElement('div');modal.className='modal';modal.hidden=true;
+modal.innerHTML='<div class="mbk" data-close></div><div class="mdl" role="dialog" aria-modal="true" aria-labelledby="mt"><div class="mhd"><h3 id="mt"></h3><button class="mx" type="button" data-close aria-label="Fechar">✕</button></div><div class="mbd"></div></div>';
+document.body.appendChild(modal);
+let lastF=null;
+function openModal(t,h){lastF=document.activeElement;$('#mt',modal).textContent=t;const b=$('.mbd',modal);b.innerHTML=h;b.scrollTop=0;modal.hidden=false;$('.mx',modal).focus();}
+function closeModal(){modal.hidden=true;if(lastF&&lastF.focus)lastF.focus();}
+modal.addEventListener('click',e=>{if(e.target.closest('[data-close]'))closeModal();});
+
+let cur=-1;
+const sh=$('#sh');
+function chkScroll(){const e=cur>=0&&SL[cur]&&SL[cur].el;if(!e){sh.hidden=true;return;}const rest=e.scrollHeight-e.clientHeight-e.scrollTop;sh.hidden=!(e.scrollHeight-e.clientHeight>24&&rest>24);}
+sh.onclick=()=>{const e=SL[cur].el;e.scrollBy({top:Math.round(e.clientHeight*.7),behavior:'smooth'});};
+SL.forEach(x=>x.el.addEventListener('scroll',chkScroll,{passive:true}));
+window.addEventListener('resize',chkScroll);
+stage.addEventListener('click',()=>setTimeout(chkScroll,80));
+function go(i){if(i<0||i>=SL.length||i===cur)return;cur=i;
+ SL.forEach((s,k)=>{s.el.classList.toggle('on',k===i);s.el.dataset.s=k<i?'before':'after';if(k===i)s.el.removeAttribute('aria-hidden');else s.el.setAttribute('aria-hidden','true');});
+ document.body.classList.toggle('dk',!!SL[i].dark);SL[i].el.scrollTop=0;
+ $$('.rv',SL[i].el).forEach(r=>{r.style.animation='none';void r.offsetWidth;r.style.animation='';});
+ if(SL[i].enter)SL[i].enter(SL[i].el);
+ $('#pos').textContent=(i+1)+' de '+SL.length;$('#prog').style.width=((i+1)/SL.length*100)+'%';
+ $$('#dots button').forEach((b,k)=>b.setAttribute('aria-current',k===i));
+ $('#bPrev').disabled=i===0;$('#bNext').disabled=i===SL.length-1;
+ try{history.replaceState(null,'','#'+(i+1));}catch(e){}
+ sh.hidden=true;setTimeout(chkScroll,700);
+}
+$('#bPrev').onclick=()=>go(cur-1);$('#bNext').onclick=()=>go(cur+1);
+$('#dots').onclick=e=>{const b=e.target.closest('button');if(b)go(+b.dataset.i);};
+stage.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g)go(+g.dataset.go);});
+document.addEventListener('keydown',e=>{
+ if(!modal.hidden){if(e.key==='Escape')closeModal();return;}
+ if(e.altKey||e.ctrlKey||e.metaKey)return;const tg=e.target.tagName;if(tg==='INPUT'||tg==='SELECT'||tg==='TEXTAREA')return;
+ if(e.key==='ArrowRight'||e.key==='PageDown')go(cur+1);else if(e.key==='ArrowLeft'||e.key==='PageUp')go(cur-1);});
+let tx=null;stage.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
+stage.addEventListener('touchend',e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx;tx=null;if(Math.abs(dx)>110&&!e.target.closest('.tbl,.chips'))go(cur+(dx<0?1:-1));},{passive:true});
+window.addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1),10);if(n)go(n-1);});
+go(Math.min(SL.length-1,Math.max(0,(parseInt(location.hash.slice(1),10)||1)-1)));
+})();
+</script>
